@@ -1,0 +1,13 @@
+# Bỏ qua thư mục build của NetBeans (Maven)
+target/
+build/
+dist/
+
+# Bỏ qua các file cấu hình chạy cục bộ trên máy
+nbactions.xml
+nbproject/private/
+nbproject/Makefile-*.mk
+nbproject/Package-*.bash
+
+# Cấu hình môi trường IDE
+.netbeans_*/
