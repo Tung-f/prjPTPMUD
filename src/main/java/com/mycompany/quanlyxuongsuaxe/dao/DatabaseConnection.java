@@ -1,4 +1,4 @@
-package com.mycompany.quanlyxuongsuaxe; 
+package com.mycompany.quanlyxuongsuaxe.dao; 
 
 import java.sql.Connection;
 import java.sql.DriverManager;
