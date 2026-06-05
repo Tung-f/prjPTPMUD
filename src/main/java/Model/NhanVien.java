@@ -86,6 +86,10 @@ public class NhanVien {
         this.VaiTro = VaiTro;
     }
 
+    public void setTrangThai(boolean TrangThai) {
+        this.TrangThai = TrangThai;
+    }
+
     @Override
     public String toString() {
         return "NhanVien{"
