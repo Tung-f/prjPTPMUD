@@ -59,7 +59,7 @@ public class NhanVienDAO {
     
     //Tim nhan vien theo ma
     public NhanVien findByID(int MaNV){
-        String sql = "SELECT *FROM NhanVien WHERE MaNV = ?";
+        String sql = "SELECT * FROM NhanVien WHERE MaNV = ?";
         
          try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -131,7 +131,7 @@ public class NhanVienDAO {
     //Cap nhat nhan vien
     public boolean update(NhanVien nv){
         String sql =    "UPDATE NhanVien"
-                        +"SET TenDangNhap = ?"
+                        +" SET TenDangNhap = ?"
                         +",MatKhau = ?"
                         +",HoTen = ?"
                         +",SoDienThoai = ?"

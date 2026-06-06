@@ -13,9 +13,9 @@ public class Xe {
     private String BienSo;
     private String HangXe;
     private String LoaiXe;
-    private String MaKH;
+    private int MaKH;
 
-    public Xe(int MaXe, String BienSo, String HangXe, String LoaiXe, String MaKH) {
+    public Xe(int MaXe, String BienSo, String HangXe, String LoaiXe, int MaKH) {
         this.MaXe = MaXe;
         this.BienSo = BienSo;
         this.HangXe = HangXe;
@@ -42,7 +42,7 @@ public class Xe {
         return LoaiXe;
     }
 
-    public String getMaKH() {
+    public int getMaKH() {
         return MaKH;
     }
 
@@ -62,7 +62,7 @@ public class Xe {
         this.LoaiXe = LoaiXe;
     }
 
-    public void setMaKH(String MaKH) {
+    public void setMaKH(int MaKH) {
         this.MaKH = MaKH;
     }
     
