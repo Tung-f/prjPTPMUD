@@ -106,10 +106,7 @@ public class NhanVienDAO {
     //Them nhan vien
     public boolean insert(NhanVien nv){
         
-        String sql =    "INSERT INTO NhanVien " +
-                        "(TenDangNhap, MatKhau, HoTen, " +
-                        "SoDienThoai, VaiTro, TrangThai) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO NhanVien (TenDangNhap,MatKhau,HoTen,SoDienThoai,VaiTro,TrangThai) VALUES (?, ?, ?, ?, ?, ?)";
         try(
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
@@ -130,14 +127,7 @@ public class NhanVienDAO {
     
     //Cap nhat nhan vien
     public boolean update(NhanVien nv){
-        String sql =    "UPDATE NhanVien"
-                        +" SET TenDangNhap = ?"
-                        +",MatKhau = ?"
-                        +",HoTen = ?"
-                        +",SoDienThoai = ?"
-                        +",VaiTro = ?"
-                        +",TrangThai = ?"
-                        +" WHERE MaNV = ?";
+        String sql = "UPDATE NhanVien SET TenDangNhap = ? ,MatKhau = ? ,HoTen = ? ,SoDienThoai = ? ,VaiTro = ? ,TrangThai = ? WHERE MaNV = ?";
         try(
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
@@ -176,10 +166,7 @@ public class NhanVienDAO {
     
     //Dang Nhap
     public NhanVien login(String username , String password){
-        String sql =    "SELECT * FROM NhanVien "
-                        +"WHERE TenDangNhap = ?"
-                        +"AND MatKhau = ? "
-                        +"AND TrangThai = 1";
+        String sql = "SELECT * FROM NhanVien WHERE TenDangNhap = ? AND MatKhau = ? AND TrangThai = 1";
         
         try(
             Connection conn = DatabaseConnection.getConnection();

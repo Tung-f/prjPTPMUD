@@ -103,10 +103,7 @@ public class PhuTungDAO {
     //Them phu tung
     public boolean insert(PhuTung pt){
         
-        String sql =    "INSERT INTO PhuTung " +
-                        "(TenPT, SoLuongTon, " +
-                        "DonGiaNhap, DonGiaBan) " +
-                        "VALUES (?, ?, ?, ?)";
+        String sql =    "INSERT INTO PhuTung (TenPT,SoLuongTon,DonGiaNhap,DonGiaBan) VALUES (?, ?, ?, ?)";
         try(
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)

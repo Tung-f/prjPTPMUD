@@ -130,7 +130,7 @@ public class XeDAO {
      
     //cap nhat
     public boolean update(Xe xe) {
-        String sql = "UPDATE Xe SET BienSo=?, HangXe=?, LoaiXe=?, MaKH=? WHERE MaXe=?";
+        String sql = "UPDATE Xe SET BienSo=? ,HangXe=? ,LoaiXe=? ,MaKH=? WHERE MaXe=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

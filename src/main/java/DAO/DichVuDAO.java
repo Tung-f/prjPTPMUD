@@ -9,7 +9,8 @@ package DAO;
  * @author Admin
  */
 import com.mycompany.quanlyxuongsuaxe.dao.DatabaseConnection;
-import Model.KhachHang;
+import Model.DichVu;
+import java.math.BigDecimal;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,32 +19,29 @@ import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
-public class KhachHangDAO {
-    //Tao doi tuong khach hang
-    private KhachHang mapResultSetToKhachHang(ResultSet rs) throws Exception{
-        KhachHang kh = new KhachHang();
+public class DichVuDAO {
+    //Tao doi tuong
+    private DichVu mapResultSetToDichVu(ResultSet rs) throws Exception{
+        DichVu dv = new DichVu();
         
-        kh.setMaKH(rs.getInt("MaKH"));
-        kh.setTenKH(rs.getString("TenKH"));
-        kh.setSoDienThoai(rs.getString("SoDienThoai"));
-        kh.setDiaChi(rs.getString("DiaChi"));
+        dv.setMaDV(rs.getInt("MaDV"));
+        dv.setTenDV(rs.getString("TenDV"));
+        dv.setTienCong(rs.getBigDecimal("TienCong"));
         
-        return kh;
+        return dv;
     }
     
-    //Lay tat ca khach hang
-    public List<KhachHang> getAll(){
-        List<KhachHang> list = new ArrayList<>();
-        
-        String sql = "SELECT * FROM KhachHang";
-        
+    //Lay tat ca
+    public List<DichVu> getAll(){
+        String sql = "SELECT * FROM DichVu ";
+        List<DichVu> list = new ArrayList<>();
         try(
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()
                 ){
             while(rs.next())
-                list.add(mapResultSetToKhachHang(rs));
+                list.add(mapResultSetToDichVu(rs));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -51,18 +49,18 @@ public class KhachHangDAO {
     }
     
     //Tim kiem theo ma
-    public KhachHang findByID(int MaKH){
-        String sql = "SELECT * FROM KhachHang WHERE MaKH = ?";
+    public DichVu findByID(int MaDV){
+        String sql = "SELECT * FROM DichVu WHERE MaDV = ?";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
-            ps.setInt(1, MaKH);
+            ps.setInt(1, MaDV);
             ResultSet rs = ps.executeQuery();
             
             if(rs.next())
-                return mapResultSetToKhachHang(rs);
+                return mapResultSetToDichVu(rs);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -70,10 +68,10 @@ public class KhachHangDAO {
     }
     
     //Tim kiem theo ten
-    public List<KhachHang> search (String keyword){
-        List<KhachHang> list= new ArrayList<>();
+    public List<DichVu> search (String keyword){
+        List<DichVu> list= new ArrayList<>();
         
-        String sql = "SELECT * FROM KhachHang WHERE TenKH LIKE ?";
+        String sql = "SELECT * FROM Dichvu WHERE TenDV LIKE ?";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
@@ -82,24 +80,24 @@ public class KhachHangDAO {
             ps.setString(1, "%"+ keyword + "%");
             ResultSet rs = ps.executeQuery();
             while(rs.next())
-                list.add(mapResultSetToKhachHang(rs));
+                list.add(mapResultSetToDichVu(rs));
         }catch(Exception e){
             e.printStackTrace();
         }
         return list;
     }
-    //Them khach hang
-    public boolean insert(KhachHang kh){        
-        String sql = "INSERT INTO KhachHang (TenKH,SoDienThoai,DiaChi) VALUES (?,?,?)";
+    
+    //Them dich vu
+    public boolean insert(DichVu dv){        
+        String sql ="INSERT INTO DichVu (TenDV, TienCong) VALUES(?,?)";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
    
-            ps.setString(1, kh.getTenKH());
-            ps.setString(2, kh.getSoDienThoai());
-            ps.setString(3, kh.getDiaChi());
+            ps.setString(1, dv.getTenDV());
+            ps.setBigDecimal(2, dv.getTienCong());
             
             return ps.executeUpdate()>0;
         }catch(SQLException e){
@@ -108,18 +106,17 @@ public class KhachHangDAO {
         return false;
     }
     
-    //Cap nhat khach hang
-    public boolean update(KhachHang kh){
-        String sql =    "UPDATE KhachHang SET TenKH = ? , SoDienThoai = ? , DiaChi = ? WHERE MaKH = ?";
+    //Cap nhat dich vu
+    public boolean update(DichVu dv){
+        String sql = "UPDATE DichVu SET TenDV = ? , TienCong = ? WHERE MaDV = ?";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
-            ps.setString(1, kh.getTenKH());
-            ps.setString(2, kh.getSoDienThoai());
-            ps.setString(3, kh.getDiaChi());
-            ps.setInt(4, kh.getMaKH());
+            ps.setString(1, dv.getTenDV());
+            ps.setBigDecimal(2, dv.getTienCong());
+            ps.setInt(3, dv.getMaDV());
             return ps.executeUpdate()>0;
         }catch(SQLException e){
             e.printStackTrace();
@@ -127,21 +124,19 @@ public class KhachHangDAO {
         return false;
     }
     
-    //Xoa khach hang
-    public boolean delete(int MaKH){
-        String sql = "DELETE FROM KhachHang WHERE MaKH = ?";
+    //Xoa dich vu
+    public boolean delete(int MaDV){
+        String sql = "DELETE FROM DichVu WHERE MaDV = ?";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
-            ps.setInt(1, MaKH);
+            ps.setInt(1, MaDV);
             return ps.executeUpdate()>0;
         }catch(SQLException e){
             e.printStackTrace();
         }
         return false;
     }
-    
-    
 }
