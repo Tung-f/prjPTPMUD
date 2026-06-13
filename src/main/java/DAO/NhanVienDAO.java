@@ -164,6 +164,22 @@ public class NhanVienDAO {
         return false;
     }
     
+    //Doi mat khau
+    public boolean updatePassword(String MatKhauMoi, int MaNV){
+        String sql ="UPDATE NhanVien SET MatKhau = ? WHERE MaNV = ?";
+        
+        try(
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+                ){
+            ps.setString(1, MatKhauMoi);
+            ps.setInt(2, MaNV);
+            return ps.executeUpdate()>0;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
     //Dang Nhap
     public NhanVien login(String username , String password){
         String sql = "SELECT * FROM NhanVien WHERE TenDangNhap = ? AND MatKhau = ? AND TrangThai = 1";
