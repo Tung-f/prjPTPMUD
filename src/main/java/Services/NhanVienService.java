@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NhanVienService {
-    //Login
+    
     private NhanVienDAO nvd;
     
     public NhanVienService(){
         nvd = new NhanVienDAO();
     }
-    
+    //Login
     public NhanVien LoginService (String TenDangNhap , String MatKhau) throws Exception{
         if(TenDangNhap == null || TenDangNhap.trim().isEmpty())
             throw new Exception("Tên đăng nhập không được để trống");
@@ -65,14 +65,18 @@ public class NhanVienService {
         return nvd.insert(nv);
     }
     
-    //Xóa nhân viên
-    public boolean delete (int MaNV){
-        return nvd.delete(MaNV);
+    //Thay đổi trạng thái của nhân viên
+    public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai)throws Exception{
+        if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
+            throw new Exception("Bạn không có quyền này!");
+        return nvd.setTrangThaiNhanVien(MaNV, TrangThai);
     }
     
     //Sửa thông tin nhân viên
     public boolean update (NhanVien nv){
-        return nvd.update(nv);
+        if(Utils.Auth.user.getMaNV() == nv.getMaNV())
+            return nvd.update(nv);
+        return false;
     }
     
     //Thay đổi mật khẩu
@@ -82,9 +86,10 @@ public class NhanVienService {
         if(MatKhauMoi.trim().isEmpty())
             throw new Exception("Chưa nhập mật khẩu mới !");
         if(XacNhanMatKhau.trim().isEmpty())
+            throw new Exception("Chưa nhập xác nhập mật khẩu !");
+        if(!XacNhanMatKhau.trim().equals(MatKhauMoi))
             throw new Exception("Xác nhận mật khẩu không khớp !");
-        
-        if(Utils.Auth.user.getMatKhau().equals(MatKhauCu))
+        if(!Utils.Auth.user.getMatKhau().equals(MatKhauCu))
             throw new Exception("Mật khẩu cũ không đúng !");
         
         return nvd.updatePassword(MatKhauMoi, Utils.Auth.user.getMaNV());

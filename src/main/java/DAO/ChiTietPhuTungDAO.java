@@ -136,5 +136,29 @@ public class ChiTietPhuTungDAO {
         }
         return false;
     }
-    
+    //Tổng tiền dịch vụ
+    public BigDecimal tongTienPhuTung(int maPhieu) {
+
+        String sql = "SELECT SUM(ThanhTien) FROM ChiTietPhuTung WHERE MaPhieu = ?";
+
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setInt(1, maPhieu);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                BigDecimal tongTien = rs.getBigDecimal(1);
+                return tongTien != null ? tongTien : BigDecimal.ZERO;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return BigDecimal.ZERO;
+    }
 }

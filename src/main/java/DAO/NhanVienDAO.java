@@ -164,6 +164,22 @@ public class NhanVienDAO {
         return false;
     }
     
+    //Thay đổi trạng thái nhân viên
+    public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai){
+        String sql= "UPDATE NhanVien SET TrangThai = ? WHERE MaNV = ?";
+        
+        try(
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+                ){
+            ps.setInt(1, MaNV);
+            ps.setBoolean(2, TrangThai);
+            return ps.executeUpdate()>0;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
     //Doi mat khau
     public boolean updatePassword(String MatKhauMoi, int MaNV){
         String sql ="UPDATE NhanVien SET MatKhau = ? WHERE MaNV = ?";

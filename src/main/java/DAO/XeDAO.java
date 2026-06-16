@@ -89,7 +89,7 @@ public class XeDAO {
         return list;
     }
     //Tim theo ma khach hang
-    public List<Xe> getByKhachHang(int MaKH) {
+    public List<Xe> findByKhachHang(int MaKH) {
         List<Xe> list = new ArrayList<>();
         String sql = "SELECT * FROM Xe WHERE MaKH = ?";
 
@@ -107,7 +107,7 @@ public class XeDAO {
         }
         return list;
     }
-    //them xe
+    //Them xe
      public boolean insert(Xe xe) {
         String sql = "INSERT INTO Xe (BienSo, HangXe, LoaiXe, MaKH) VALUES (?, ?, ?, ?)";
 
@@ -128,7 +128,7 @@ public class XeDAO {
         return false;
      }
      
-    //cap nhat
+    //Cap nhat
     public boolean update(Xe xe) {
         String sql = "UPDATE Xe SET BienSo=? ,HangXe=? ,LoaiXe=? ,MaKH=? WHERE MaXe=?";
 
@@ -149,7 +149,7 @@ public class XeDAO {
         return false;
     }
     
-    //xoa
+    //Xoa
      public boolean delete(int MaXe) {
         String sql = "DELETE FROM Xe WHERE MaXe=?";
 

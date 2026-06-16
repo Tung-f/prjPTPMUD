@@ -27,7 +27,7 @@ public class DichVuDAO {
         dv.setMaDV(rs.getInt("MaDV"));
         dv.setTenDV(rs.getString("TenDV"));
         dv.setTienCong(rs.getBigDecimal("TienCong"));
-        
+        dv.setTrangThai(rs.getBoolean("TrangThai"));
         return dv;
     }
     
@@ -89,7 +89,7 @@ public class DichVuDAO {
     
     //Them dich vu
     public boolean insert(DichVu dv){        
-        String sql ="INSERT INTO DichVu (TenDV, TienCong) VALUES(?,?)";
+        String sql ="INSERT INTO DichVu (TenDV, TienCong, TrangThai) VALUES(?,?,?)";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
@@ -98,7 +98,7 @@ public class DichVuDAO {
    
             ps.setString(1, dv.getTenDV());
             ps.setBigDecimal(2, dv.getTienCong());
-            
+            ps.setBoolean(3, dv.isTrangThai());
             return ps.executeUpdate()>0;
         }catch(SQLException e){
             e.printStackTrace();
@@ -108,7 +108,7 @@ public class DichVuDAO {
     
     //Cap nhat dich vu
     public boolean update(DichVu dv){
-        String sql = "UPDATE DichVu SET TenDV = ? , TienCong = ? WHERE MaDV = ?";
+        String sql = "UPDATE DichVu SET TenDV = ? , TienCong = ? , TrangThai = ? WHERE MaDV = ?";
         
         try(
                 Connection conn = DatabaseConnection.getConnection();
@@ -116,7 +116,8 @@ public class DichVuDAO {
                 ){
             ps.setString(1, dv.getTenDV());
             ps.setBigDecimal(2, dv.getTienCong());
-            ps.setInt(3, dv.getMaDV());
+            ps.setBoolean(3, dv.isTrangThai());
+            ps.setInt(4, dv.getMaDV());
             return ps.executeUpdate()>0;
         }catch(SQLException e){
             e.printStackTrace();
@@ -135,6 +136,22 @@ public class DichVuDAO {
             ps.setInt(1, MaDV);
             return ps.executeUpdate()>0;
         }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    //Cập nhật trạng thái dịch vụ
+    public boolean updateTrangThai(int MaDV, boolean TrangThai){
+        String sql = "UPDATE DichVu SET TrangThai = ? WHERE MaDV = ?";
+        
+        try(
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+                ){
+            ps.setBoolean(1, TrangThai);
+            ps.setInt(2, MaDV);
+            return ps.executeUpdate()>0;
+        }catch(Exception e){
             e.printStackTrace();
         }
         return false;

@@ -10,6 +10,7 @@ package DAO;
  */
 import com.mycompany.quanlyxuongsuaxe.dao.DatabaseConnection;
 import Model.ChiTietDichVu;
+import java.math.BigDecimal;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -51,7 +52,8 @@ public class ChiTietDichVuDAO {
     }
     
     //tim kiem theo ma phieu
-    public ChiTietDichVu findByMaPhieu(int MaPhieu){
+    public List<ChiTietDichVu> findByMaPhieu(int MaPhieu){
+        List<ChiTietDichVu> list = new ArrayList<>();
         String sql = "SELECT * FROM ChiTietDichVu WHERE MaPhieu = ?";
         
          try (
@@ -63,16 +65,16 @@ public class ChiTietDichVuDAO {
 
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return mapResultSetToChiTietDichVu(rs);
+            while (rs.next()) {
+                list.add(mapResultSetToChiTietDichVu(rs));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return list;
     }
-    //Them phu tung
+    //Them chi tiet dich vu
     public boolean insert(ChiTietDichVu ctdv){
         
         String sql ="INSERT INTO ChiTietDichVu (MaPhieu,MaDV,DonGia) VALUES (?, ?, ?)";
@@ -122,5 +124,32 @@ public class ChiTietDichVuDAO {
         }
         return false;
     }
-    
+    //Tính tổng tiền dịch vụ
+    public BigDecimal tongTienDichVu(int maPhieu) {
+
+    String sql = "SELECT SUM(DonGia) AS TongTien FROM ChiTietDichVu WHERE MaPhieu = ?";
+
+    try (
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+    ) {
+
+        ps.setInt(1, maPhieu);
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            BigDecimal tongTien = rs.getBigDecimal("TongTien");
+
+            if (tongTien != null) {
+                return tongTien;
+            }
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return BigDecimal.ZERO;
+}
 }
