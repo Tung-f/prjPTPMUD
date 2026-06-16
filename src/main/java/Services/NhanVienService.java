@@ -65,6 +65,19 @@ public class NhanVienService {
         return nvd.insert(nv);
     }
     
+    //Tìm nhân viên rảnh nhất
+
+    public int findNhanVienRanhNhat() throws Exception {
+        int maNV = nvd.findNhanVienRanhNhat();
+
+        if (maNV == -1) {
+            throw new Exception("Không có nhân viên nào khả dụng!");
+        }
+
+        return maNV;
+    }
+
+    
     //Thay đổi trạng thái của nhân viên
     public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai)throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))

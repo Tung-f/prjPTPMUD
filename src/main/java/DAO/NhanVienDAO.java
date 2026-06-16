@@ -164,6 +164,25 @@ public class NhanVienDAO {
         return false;
     }
     
+    //
+    public int findNhanVienRanhNhat() {
+        String sql = "SELECT TOP 1 nv.MaNV FROM NhanVien nv LEFT JOIN PhieuSuaChua psc ON nv.MaNV = psc.MaNV AND psc.TrangThai IN (N'Đang sửa', N'Chờ sửa') WHERE nv.VaiTro = 0 GROUP BY nv.MaNV ORDER BY COUNT(psc.MaPhieu)";
+
+        try (
+            Connection con = DatabaseConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+        ) {
+            if (rs.next()) {
+                return rs.getInt("MaNV");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+    
     //Thay đổi trạng thái nhân viên
     public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai){
         String sql= "UPDATE NhanVien SET TrangThai = ? WHERE MaNV = ?";

@@ -11,6 +11,7 @@ package Services;
 import DAO.PhieuSuaChuaDAO;
 import DAO.ChiTietDichVuDAO;
 import DAO.ChiTietPhuTungDAO;
+import DAO.NhanVienDAO;
 import Model.PhieuSuaChua;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -35,9 +36,22 @@ public class PhieuSuaChuaService {
     }
     
     //Thêm phiếu sửa chữa
-    public boolean insert (PhieuSuaChua psc){
-        return pscd.insert(psc);
-    }
+    public boolean insert(PhieuSuaChua psc) throws Exception {
+
+    NhanVienService nvs = new NhanVienService();
+
+    psc.setMaNV(nvs.findNhanVienRanhNhat());
+
+    psc.setNgayLap(new java.sql.Date(System.currentTimeMillis()));
+
+    psc.setNgayHoanThanh(null);
+
+    psc.setTrangThai("Đang sửa");
+
+    psc.setTongTien(BigDecimal.ZERO);
+
+    return pscd.insert(psc);
+}
     
     //Xóa phiếu sửa chữa
     public boolean delete (int Maphieu)throws Exception{
@@ -98,4 +112,6 @@ public class PhieuSuaChuaService {
 
     return tongDichVu.add(tongPhuTung);
     }
+    
+   
 }
