@@ -31,15 +31,15 @@ public class LoginController {
     private void Login() throws Exception {
 
         try {
-                String TenDangNhap = txtTenDangNhap.getText();
-        
-                String MatKhau = txtMatKhau.getText();
-        
-                NhanVien nv = nvs.LoginService(TenDangNhap, MatKhau);
-        
-                lblTB.setText("Đăng nhập thành công ");
-                
-                Utils.Auth.user = nv;
+//                String TenDangNhap = txtTenDangNhap.getText();
+//        
+//                String MatKhau = txtMatKhau.getText();
+//        
+//                NhanVien nv = nvs.LoginService(TenDangNhap, MatKhau);
+//        
+//                lblTB.setText("Đăng nhập thành công ");
+//                
+//                Utils.Auth.user = nv;
             //Chuyen sang trang sau
             FXMLLoader loader = new FXMLLoader(getClass().getResource("CongViec.fxml"));
             Parent root = loader.load();

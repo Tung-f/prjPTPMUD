@@ -13,7 +13,7 @@ import javafx.fxml.Initializable;
  *
  * @author FPT 262 TXPT
  */
-public class DichvuController implements Initializable {
+public class KhachhangController implements Initializable {
 
     /**
      * Initializes the controller class.
