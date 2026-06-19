@@ -43,7 +43,9 @@ public class PhuTungService {
     }
     
     //Sửa thông tin phụ tùng
-    public boolean update (PhuTung pt){
+    public boolean update (PhuTung pt)throws Exception{
+        if(!Utils.Auth.user.getVaiTro().trim().equalsIgnoreCase("Admin"))
+            throw new Exception("Bạn không có quyền này!");
         return ptd.update(pt);
     }
     
@@ -54,7 +56,7 @@ public class PhuTungService {
     
     //Nhập hàng
     public boolean nhapHang (int MaPT, int SoLuong) throws Exception{
-        if(SoLuong <0)
+        if(SoLuong <=0)
             throw new Exception("Số lượng phải lớn hơn 0 ");
         if(!Utils.Auth.user.getVaiTro().trim().equalsIgnoreCase("Admin"))
             throw new Exception("Bạn không có quyền này!");
@@ -63,6 +65,8 @@ public class PhuTungService {
     //Giảm số lượng
     public boolean giamSoLuong (int MaPT , int SoLuong)throws Exception{
         PhuTung pt = ptd.findByID(MaPT);
+        if(SoLuong <=0)
+            throw new Exception("Số lượng phải lớn hơn 0 ");
         if(SoLuong > pt.getSoLuongTon())
             throw new Exception("Trong kho không còn đủ phụ tùng này !");
         return ptd.giamSoLuong(MaPT, SoLuong);

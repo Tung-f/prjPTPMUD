@@ -166,7 +166,7 @@ public class NhanVienDAO {
     
     //
     public int findNhanVienRanhNhat() {
-        String sql = "SELECT TOP 1 nv.MaNV FROM NhanVien nv LEFT JOIN PhieuSuaChua psc ON nv.MaNV = psc.MaNV AND psc.TrangThai IN (N'Đang sửa', N'Chờ sửa') WHERE nv.VaiTro <> 'Admin' AND nv.TrangThai = 1 GROUP BY nv.MaNV ORDER BY COUNT(psc.MaPhieu)";
+        String sql = "SELECT TOP 1 nv.MaNV FROM NhanVien nv LEFT JOIN PhieuSuaChua psc ON nv.MaNV = psc.MaNV AND psc.TrangThai IN (N'Đang sửa', N'Chờ sửa') WHERE nv.VaiTro <> 'Admin' AND nv.TrangThai = 1 GROUP BY nv.MaNV ORDER BY COUNT(psc.MaPhieu), nv.MaNV";
 
         try (
             Connection con = DatabaseConnection.getConnection();

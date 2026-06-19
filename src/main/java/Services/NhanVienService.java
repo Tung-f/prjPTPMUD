@@ -105,6 +105,12 @@ public class NhanVienService {
         if(!Utils.Auth.user.getMatKhau().equals(MatKhauCu))
             throw new Exception("Mật khẩu cũ không đúng !");
         
-        return nvd.updatePassword(MatKhauMoi, Utils.Auth.user.getMaNV());
-    }
+        boolean result = nvd.updatePassword(MatKhauMoi, Utils.Auth.user.getMaNV());
+
+        if(result){
+            Utils.Auth.user.setMatKhau(MatKhauMoi);
+        }
+
+        return result;
+            }
 }
