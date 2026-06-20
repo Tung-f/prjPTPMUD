@@ -31,17 +31,17 @@ public class LoginController {
     private void Login() throws Exception {
 
         try {
-//                String TenDangNhap = txtTenDangNhap.getText();
-//        
-//                String MatKhau = txtMatKhau.getText();
-//        
-//                NhanVien nv = nvs.LoginService(TenDangNhap, MatKhau);
-//        
-//                lblTB.setText("Đăng nhập thành công ");
-//                
-//                Utils.Auth.user = nv;
+                String TenDangNhap = txtTenDangNhap.getText();
+        
+                String MatKhau = txtMatKhau.getText();
+        
+                NhanVien nv = nvs.LoginService(TenDangNhap, MatKhau);
+        
+                lblTB.setText("Đăng nhập thành công ");
+                
+                Utils.Auth.user = nv;
             //Chuyen sang trang sau
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("CongViec.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("congviec.fxml"));
             Parent root = loader.load();
 
             Stage stage= (Stage) txtTenDangNhap.getScene().getWindow();
@@ -49,7 +49,12 @@ public class LoginController {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
+            
+    e.printStackTrace();
             lblTB.setText(e.getMessage());
+System.out.println("====== LỖI ĐẦY ĐỦ Ở ĐÂY: ======");
+e.printStackTrace(); // Lệnh này sẽ in toàn bộ stack trace chi tiết ra tab Output
+System.out.println("==============================");
         }
     }
 }

@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package Model;
+
 /**
  *
  * @author Admin
@@ -10,7 +11,9 @@ package Model;
 
 import java.util.Date;
 import java.math.BigDecimal;
+
 public class PhieuSuaChua {
+
     private int MaPhieu;
     private int MaXe;
     private int MaNV;
@@ -18,6 +21,9 @@ public class PhieuSuaChua {
     private Date NgayHoanThanh;
     private String TrangThai;
     private BigDecimal TongTien;
+
+
+    
 
     public PhieuSuaChua(int MaPhieu, int MaXe, int MaNV, Date NgayLap, Date NgayHoanThanh, String TrangThai, BigDecimal TongTien) {
         this.MaPhieu = MaPhieu;
@@ -60,6 +66,8 @@ public class PhieuSuaChua {
         return TongTien;
     }
 
+    
+
     public void setMaPhieu(int MaPhieu) {
         this.MaPhieu = MaPhieu;
     }
@@ -87,7 +95,7 @@ public class PhieuSuaChua {
     public void setTongTien(BigDecimal TongTien) {
         this.TongTien = TongTien;
     }
-    
+
     @Override
     public String toString() {
         return "PhieuSuaChua{"
