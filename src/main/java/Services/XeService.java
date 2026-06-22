@@ -13,6 +13,8 @@ import DAO.XeDAO;
 import Model.Xe;
 import DAO.PhieuSuaChuaDAO;
 import Model.PhieuSuaChua;
+import java.sql.Connection;
+import java.sql.SQLException;
         
 import java.util.List;
 import java.util.ArrayList;
@@ -35,8 +37,13 @@ public class XeService {
     }
     
     //Tìm kiếm theo biển số
-    public List<Xe> findByBienSo (String keyword){
-        return x.findByBienSo(keyword);
+    public Xe findByBienSo (String keyword,Connection conn){
+        try{
+            return x.findByBienSo(keyword, conn);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
     
     //Tìm kiếm theo mã khách hàng
@@ -45,13 +52,22 @@ public class XeService {
     }
     
     //Thêm xe
-    public boolean insert (Xe xe){
-        return x.insert(xe);
+    public boolean insert (Xe xe, Connection conn){
+    try{
+        return x.insert(xe, conn);
+    }catch(SQLException e){
+        e.printStackTrace();
+    }
+    return false;
     }
     
     //Sửa thông tin  xe
-    public boolean update (Xe xe){
-        return x.update(xe);
+    public boolean update (Xe xe, Connection conn){
+    try{
+        return x.update(xe, conn);
+    }catch(SQLException e){
+        e.printStackTrace();
     }
-    
+    return false;
+    }
 }

@@ -52,6 +52,7 @@ public class XeDAO {
         }
         return list;
     }
+    
     //Tim kiem theo ma xe
     public Xe findByID(int MaXe){
         String sql = "SELECT * FROM Xe WHERE MaXe = ?";
@@ -71,23 +72,23 @@ public class XeDAO {
         return null;
     }
     //Tim kiem theo bien so
-    public List<Xe> findByBienSo (String keyword){
-        List<Xe> list = new ArrayList<>();
-        String sql = "SELECT * FROM Xe WHERE BienSo LIKE ?";
-        
-        try(
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-                ){
-            ps.setString(1, "%"+ keyword + "%");
-            ResultSet rs = ps.executeQuery();
-            while(rs.next())
-                list.add(mapResultSetToXe(rs));
-        }catch(Exception e){
-            e.printStackTrace();
+    public Xe findByBienSo(String keyword, Connection conn) throws SQLException, Exception {
+
+        String sql = "SELECT * FROM Xe  WHERE BienSo = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, keyword);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToXe(rs);
+                }
+            }
         }
-        return list;
+        return null;
     }
+    
     //Tim theo ma khach hang
     public List<Xe> findByKhachHang(int MaKH) {
         List<Xe> list = new ArrayList<>();
@@ -108,33 +109,25 @@ public class XeDAO {
         return list;
     }
     //Them xe
-     public boolean insert(Xe xe) {
-        String sql = "INSERT INTO Xe (BienSo, HangXe, LoaiXe, MaKH) VALUES (?, ?, ?, ?)";
+    public boolean insert(Xe xe, Connection conn) throws SQLException {
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+    String sql = "INSERT INTO Xe (BienSo, HangXe, LoaiXe, MaKH) VALUES (?, ?, ?, ?)";
 
-            ps.setString(1, xe.getBienSo());
-            ps.setString(2, xe.getHangXe());
-            ps.setString(3, xe.getLoaiXe());
-            ps.setInt(4, xe.getMaKH());
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            return ps.executeUpdate() > 0;
+        ps.setString(1, xe.getBienSo());
+        ps.setString(2, xe.getHangXe());
+        ps.setString(3, xe.getLoaiXe());
+        ps.setInt(4, xe.getMaKH());
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-     }
+        return ps.executeUpdate() > 0;
+    }
+}
      
     //Cap nhat
-    public boolean update(Xe xe) {
-        String sql = "UPDATE Xe SET BienSo=? ,HangXe=? ,LoaiXe=? ,MaKH=? WHERE MaXe=?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+    public boolean update(Xe xe, Connection conn)throws SQLException {
+        String sql = "UPDATE Xe SET BienSo=? ,HangXe=? ,LoaiXe=?  WHERE MaKH=? AND MaXe=? ";
+        try ( PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, xe.getBienSo());
             ps.setString(2, xe.getHangXe());
             ps.setString(3, xe.getLoaiXe());
@@ -142,29 +135,16 @@ public class XeDAO {
             ps.setInt(5, xe.getMaXe());
 
             return ps.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return false;
     }
     
     //Xoa
-     public boolean delete(int MaXe) {
+    public boolean delete(int MaXe, Connection conn)throws SQLException  {
         String sql = "DELETE FROM Xe WHERE MaXe=?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, MaXe);
-
             return ps.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-
-        return false;
     }
      
 }

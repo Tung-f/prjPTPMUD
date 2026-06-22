@@ -54,7 +54,7 @@
                         <Font size="13.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: white;" text="⏻ Đăng xuất">
+                  <Button fx:id="btnDangXuat" mnemonicParsing="false" onAction="#handleLogOut" style="-fx-background-color: transparent; -fx-text-fill: white;" text="⏻ Đăng xuất">
                      <font>
                         <Font size="13.0" />
                      </font>
@@ -112,7 +112,7 @@
                            </font>
                         </Label>
                         <Region maxWidth="-Infinity" prefHeight="36.0" prefWidth="40.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnThemMoi" mnemonicParsing="false" style="-fx-background-color: #2563eb; fox-font-weight: bold;" text="+ Thêm mới" textFill="WHITE" />
+                        <Button fx:id="btnThemMoi" mnemonicParsing="false" onAction="#handleThemMoi" style="-fx-background-color: #2563eb; fox-font-weight: bold;" text="+ Thêm mới" textFill="WHITE" />
                      </children>
                   </HBox>
                   <HBox maxHeight="-Infinity" prefHeight="27.0" prefWidth="200.0">
@@ -146,9 +146,9 @@
                            </font>
                         </Label>
                         <Region maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnSaveAs" mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text=" 💾 Save as" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="🖨 Print" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="Cancel" />
+                        <Button fx:id="btnSaveAs" mnemonicParsing="false" onAction="#handleSaveAs" style="-fx-background-color: #f1f5f9;" text=" 💾 Save as" />
+                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="🖨 Update" />
+                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleThemMoi" style="-fx-background-color: #f1f5f9;" text="Cancel" />
                      </children>
                   </HBox>
                   <GridPane hgap="10.0" vgap="10.0">

@@ -10,6 +10,8 @@ package Services;
  */
 import Model.NhanVien;
 import DAO.NhanVienDAO;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,36 +61,50 @@ public class NhanVienService {
     }
     
     //Thêm nhân viên
-    public boolean insert (NhanVien nv)throws Exception{
+    public boolean insert (NhanVien nv,Connection conn)throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
             throw new Exception("Bạn không có quyền này!");
-        return nvd.insert(nv);
+        try{
+            return nvd.insert(nv, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     //Tìm nhân viên rảnh nhất
 
-    public int findNhanVienRanhNhat() throws Exception {
-        int maNV = nvd.findNhanVienRanhNhat();
+    public int findNhanVienRanhNhat(Connection conn) throws Exception {
+    int maNV = nvd.findNhanVienRanhNhat(conn);
 
-        if (maNV == -1) {
-            throw new Exception("Không có nhân viên nào khả dụng!");
-        }
-
-        return maNV;
+    if (maNV == -1) {
+        throw new Exception("Không có nhân viên nào khả dụng!");
     }
+
+    return maNV; 
+}
 
     
     //Thay đổi trạng thái của nhân viên
-    public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai)throws Exception{
+    public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai,Connection conn)throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
             throw new Exception("Bạn không có quyền này!");
-        return nvd.setTrangThaiNhanVien(MaNV, TrangThai);
+        try{
+            return nvd.setTrangThaiNhanVien(MaNV, TrangThai, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     //Sửa thông tin nhân viên
-    public boolean update (NhanVien nv){
+    public boolean update (NhanVien nv,Connection conn){
         if(Utils.Auth.user.getMaNV() == nv.getMaNV())
-            return nvd.update(nv);
+            try{
+            return nvd.update(nv, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
         return false;
     }
     

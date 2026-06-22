@@ -104,13 +104,10 @@ public class NhanVienDAO {
     }
     
     //Them nhan vien
-    public boolean insert(NhanVien nv){
+    public boolean insert(NhanVien nv, Connection conn)throws SQLException{
         
         String sql = "INSERT INTO NhanVien (TenDangNhap,MatKhau,HoTen,SoDienThoai,VaiTro,TrangThai) VALUES (?, ?, ?, ?, ?, ?)";
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-                ){
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
                 ps.setString(1, nv.getTenDangNhap());
                 ps.setString(2, nv.getMatKhau());
                 ps.setString(3, nv.getHoTen());
@@ -119,17 +116,13 @@ public class NhanVienDAO {
                 ps.setBoolean(6,nv.isTrangThai());
                 
                 return ps.executeUpdate()>0;
-            }catch(SQLException e){
-               e.printStackTrace();
             }
-        return false;
     }
     
     //Cap nhat nhan vien
-    public boolean update(NhanVien nv){
+    public boolean update(NhanVien nv, Connection conn)throws SQLException{
         String sql = "UPDATE NhanVien SET TenDangNhap = ? ,MatKhau = ? ,HoTen = ? ,SoDienThoai = ? ,VaiTro = ? ,TrangThai = ? WHERE MaNV = ?";
         try(
-            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
             ){
             
@@ -142,62 +135,49 @@ public class NhanVienDAO {
             ps.setInt(7, nv.getMaNV());
 
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return false; 
+        } 
     }
     
     //Xoa nhan vien
-    public boolean delete(int MaNV){
+    public boolean delete(int MaNV, Connection conn)throws SQLException{
         String sql =" DELETE FROM NhanVien WHERE MaNV = ?";
         
         try(
-            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
             ){
             ps.setInt(1, MaNV);
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     
     //
-    public int findNhanVienRanhNhat() {
+    public int findNhanVienRanhNhat(Connection con) throws SQLException {
         String sql = "SELECT TOP 1 nv.MaNV FROM NhanVien nv LEFT JOIN PhieuSuaChua psc ON nv.MaNV = psc.MaNV AND psc.TrangThai IN (N'Đang sửa', N'Chờ sửa') WHERE nv.VaiTro <> 'Admin' AND nv.TrangThai = 1 GROUP BY nv.MaNV ORDER BY COUNT(psc.MaPhieu), nv.MaNV";
 
         try (
-            Connection con = DatabaseConnection.getConnection();
+            
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
         ) {
             if (rs.next()) {
                 return rs.getInt("MaNV");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
+        
         return -1;
     }
     
     //Thay đổi trạng thái nhân viên
-    public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai){
+    public boolean setTrangThaiNhanVien(int MaNV, boolean TrangThai, Connection conn)throws SQLException{
         String sql= "UPDATE NhanVien SET TrangThai = ? WHERE MaNV = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setInt(1, MaNV);
             ps.setBoolean(2, TrangThai);
             return ps.executeUpdate()>0;
-        }catch(Exception e){
-            e.printStackTrace();
         }
-        return false;
     }
     //Doi mat khau
     public boolean updatePassword(String MatKhauMoi, int MaNV){

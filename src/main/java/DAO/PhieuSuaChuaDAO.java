@@ -89,93 +89,7 @@ public class PhieuSuaChuaDAO {
         return null;
     }
 
-    // Thêm phiếu sửa chữa
-    public boolean insert(PhieuSuaChua psc) {
-
-        String sql = "INSERT INTO PhieuSuaChua (MaXe, MaNV, NgayLap, NgayHoanThanh, TrangThai, TongTien) VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-
-            ps.setInt(1, psc.getMaXe());
-            ps.setInt(2, psc.getMaNV());
-            ps.setTimestamp(3, (Timestamp) psc.getNgayLap());
-
-            if (psc.getNgayHoanThanh() != null) {
-                ps.setTimestamp(4, (Timestamp) psc.getNgayHoanThanh());
-            } else {
-                ps.setNull(4, java.sql.Types.TIMESTAMP);
-            }
-
-            ps.setString(5, psc.getTrangThai());
-            ps.setBigDecimal(6, psc.getTongTien());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    // Cập nhật phiếu sửa chữa
-    public boolean update(PhieuSuaChua psc) {
-
-        String sql = "UPDATE PhieuSuaChua SET MaXe = ? , MaNV = ? , NgayLap = ? , NgayHoanThanh = ?, TrangThai = ? , TongTien = ? WHERE MaPhieu = ?";
-
-        try (
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-
-            ps.setInt(1, psc.getMaXe());
-            ps.setInt(2, psc.getMaNV());
-            ps.setTimestamp(3, (Timestamp) psc.getNgayLap());
-
-            if (psc.getNgayHoanThanh() != null) {
-                ps.setTimestamp(4, (Timestamp) psc.getNgayHoanThanh());
-            } else {
-                ps.setNull(4, java.sql.Types.TIMESTAMP);
-            }
-
-            ps.setString(5, psc.getTrangThai());
-            ps.setBigDecimal(6, psc.getTongTien());
-            ps.setInt(7, psc.getMaPhieu());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    // Xóa phiếu sửa chữa
-    public boolean delete(int maPhieu) {
-
-        String sql = "DELETE FROM PhieuSuaChua WHERE MaPhieu = ?";
-
-        try (
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-
-            ps.setInt(1, maPhieu);
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    // Tìm theo mã xe
+        // Tìm theo mã xe
     public List<PhieuSuaChua> findByMaXe(int maXe) {
 
         List<PhieuSuaChua> list = new ArrayList<>();
@@ -255,49 +169,88 @@ public class PhieuSuaChuaDAO {
 
         return list;
     }
+    // Thêm phiếu sửa chữa
+    public boolean insert(PhieuSuaChua psc, Connection conn)throws SQLException {
+
+        String sql = "INSERT INTO PhieuSuaChua (MaXe, MaNV, NgayLap, NgayHoanThanh, TrangThai, TongTien) VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, psc.getMaXe());
+            ps.setInt(2, psc.getMaNV());
+            ps.setDate(3,new java.sql.Date(psc.getNgayLap().getTime()));
+            
+                ps.setDate(4, new java.sql.Date(psc.getNgayLap().getTime()));
+            
+            ps.setString(5, psc.getTrangThai());
+            ps.setBigDecimal(6, psc.getTongTien());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    // Cập nhật phiếu sửa chữa
+    public boolean update(PhieuSuaChua psc, Connection conn)throws SQLException {
+
+        String sql = "UPDATE PhieuSuaChua SET MaXe = ? , MaNV = ? , NgayLap = ? , NgayHoanThanh = ?, TrangThai = ? , TongTien = ? WHERE MaPhieu = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, psc.getMaXe());
+            ps.setInt(2, psc.getMaNV());
+             ps.setDate(3,new java.sql.Date(psc.getNgayLap().getTime()));
+
+             ps.setDate(4, new java.sql.Date(psc.getNgayLap().getTime()));
+            ps.setString(5, psc.getTrangThai());
+            ps.setBigDecimal(6, psc.getTongTien());
+            ps.setInt(7, psc.getMaPhieu());
+
+            return ps.executeUpdate() > 0;
+
+        }
+    }
+
+    // Xóa phiếu sửa chữa
+    public boolean delete(int maPhieu, Connection conn)throws SQLException {
+
+        String sql = "DELETE FROM PhieuSuaChua WHERE MaPhieu = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maPhieu);
+
+            return ps.executeUpdate() > 0;
+
+        }
+    }
 
     // Cập nhật trạng thái
-    public boolean updateTrangThai(int maPhieu, String trangThai) {
+    public boolean updateTrangThai(int maPhieu, String trangThai, Connection conn)throws SQLException {
 
         String sql = "UPDATE PhieuSuaChua SET TrangThai = ? WHERE MaPhieu = ?";
 
-        try (
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, trangThai);
             ps.setInt(2, maPhieu);
 
             return ps.executeUpdate() > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        return false;
     }
 
     // Cập nhật tổng tiền
-    public boolean updateTongTien(int maPhieu, BigDecimal tongTien) {
+    public boolean updateTongTien(int maPhieu, BigDecimal tongTien, Connection conn)throws SQLException {
 
         String sql = "UPDATE PhieuSuaChua SET TongTien = ? WHERE MaPhieu = ?";
 
-        try (
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBigDecimal(1, tongTien);
             ps.setInt(2, maPhieu);
 
             return ps.executeUpdate() > 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
-        return false;
     }
 
     // Lấy phiếu mới nhất

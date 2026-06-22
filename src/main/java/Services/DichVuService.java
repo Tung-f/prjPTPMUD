@@ -10,6 +10,8 @@ package Services;
  */
 import DAO.DichVuDAO;
 import Model.DichVu;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,24 +37,39 @@ public class DichVuService {
     }
     
     //Thêm dịch vụ
-    public boolean insert (DichVu dv)throws Exception{
+    public boolean insert (DichVu dv,Connection conn)throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
             throw new Exception ("Bạn không có quyền này !");
-        return dvd.insert(dv);
+        try{
+            return dvd.insert(dv, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     //Sửa thông tin dịch vụ
-    public boolean update (DichVu dv) throws Exception{
+    public boolean update (DichVu dv,Connection conn) throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
             throw new Exception ("Bạn không có quyền này !");
-        return dvd.update(dv);
+        try{
+            return dvd.update(dv, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     //Thay đổi trạng thái dịch vụ
-    public boolean updateTrangThai (int MaDV,boolean TrangThai)throws Exception{
+    public boolean updateTrangThai (int MaDV,boolean TrangThai,Connection conn)throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
             throw new Exception ("Bạn không có quyền này !");
         
-        return dvd.updateTrangThai(MaDV, TrangThai);
+        try{
+            return dvd.updateTrangThai(MaDV, TrangThai, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
 }

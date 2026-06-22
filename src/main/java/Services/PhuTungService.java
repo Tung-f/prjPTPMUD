@@ -10,6 +10,8 @@ package Services;
  */
 import DAO.PhuTungDAO;
 import Model.PhuTung;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +40,25 @@ public class PhuTungService {
     }
     
     //Thêm phụ tùng
-    public boolean insert (PhuTung pt){
-        return ptd.insert(pt);
+    public boolean insert (PhuTung pt, Connection conn){
+        try{
+            return ptd.insert(pt,conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     //Sửa thông tin phụ tùng
-    public boolean update (PhuTung pt)throws Exception{
+    public boolean update (PhuTung pt,Connection conn)throws Exception{
         if(!Utils.Auth.user.getVaiTro().trim().equalsIgnoreCase("Admin"))
             throw new Exception("Bạn không có quyền này!");
-        return ptd.update(pt);
+        try{
+            return ptd.update(pt,conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     //Báo hàng sắp hết
@@ -55,20 +67,30 @@ public class PhuTungService {
     }
     
     //Nhập hàng
-    public boolean nhapHang (int MaPT, int SoLuong) throws Exception{
+    public boolean nhapHang (int MaPT, int SoLuong,Connection conn) throws Exception{
         if(SoLuong <=0)
             throw new Exception("Số lượng phải lớn hơn 0 ");
         if(!Utils.Auth.user.getVaiTro().trim().equalsIgnoreCase("Admin"))
             throw new Exception("Bạn không có quyền này!");
-        return ptd.tangSoLuong(MaPT, SoLuong);
+        try{
+            return ptd.tangSoLuong(MaPT, SoLuong, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     //Giảm số lượng
-    public boolean giamSoLuong (int MaPT , int SoLuong)throws Exception{
+    public boolean giamSoLuong (int MaPT , int SoLuong,Connection conn)throws Exception{
         PhuTung pt = ptd.findByID(MaPT);
         if(SoLuong <=0)
             throw new Exception("Số lượng phải lớn hơn 0 ");
         if(SoLuong > pt.getSoLuongTon())
             throw new Exception("Trong kho không còn đủ phụ tùng này !");
-        return ptd.giamSoLuong(MaPT, SoLuong);
+        try{
+            return ptd.giamSoLuong(MaPT, SoLuong, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
 }

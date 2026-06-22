@@ -85,11 +85,10 @@ public class ChiTietPhuTungDAO {
     }
     
     //Them phu tung
-    public boolean insert(ChiTietPhuTung ctpt){
+    public boolean insert(ChiTietPhuTung ctpt, Connection conn)throws SQLException{
         
         String sql ="INSERT INTO ChiTietPhuTung (MaPhieu,MaPT,SoLuong,DonGia) VALUES (?, ?, ?, ?)";
         try(
-            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
                 ){
                 ps.setInt(1, ctpt.getMaPhieu());
@@ -97,17 +96,13 @@ public class ChiTietPhuTungDAO {
                 ps.setInt(3, ctpt.getSoLuong());
                 ps.setBigDecimal(4, ctpt.getDonGia());
                 return ps.executeUpdate()>0;
-            }catch(SQLException e){
-               e.printStackTrace();
-            }
-        return false;
+        }    
     }
     //Cap nhat chi tiet phu tung
-    public boolean update(ChiTietPhuTung ctpt){
+    public boolean update(ChiTietPhuTung ctpt, Connection conn)throws SQLException{
         String sql = "UPDATE ChiTietPhuTung SET SoLuong = ? , DonGia = ? WHERE MaPT = ? AND MaPT = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setInt(1, ctpt.getSoLuong());
@@ -115,26 +110,19 @@ public class ChiTietPhuTungDAO {
             ps.setInt(3, ctpt.getMaPhieu());
             ps.setInt(4, ctpt.getMaPT());
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     //Xoa chi tiet phu tung
-    public boolean delete(int MaPhieu, int MaPT){
+    public boolean delete(int MaPhieu, int MaPT, Connection conn)throws SQLException{
         String sql = "DELETE FROM ChiTietPhuTung WHERE MaPhieu = ? AND MaPT = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setInt(1, MaPhieu);
             ps.setInt(2, MaPT);
             return ps.executeUpdate()>0;
-        }catch(Exception e){
-            e.printStackTrace();
         }
-        return false;
     }
     //Tổng tiền dịch vụ
     public BigDecimal tongTienPhuTung(int maPhieu) {

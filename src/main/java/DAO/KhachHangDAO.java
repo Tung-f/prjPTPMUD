@@ -88,60 +88,54 @@ public class KhachHangDAO {
         }
         return list;
     }
-    //Them khach hang
-    public boolean insert(KhachHang kh){        
-        String sql = "INSERT INTO KhachHang (TenKH,SoDienThoai,DiaChi) VALUES (?,?,?)";
+    //Tìm kiếm  theo số điện thoại
+    public KhachHang findBySoDienThoai(String SDT,Connection conn) throws SQLException, Exception{
+        String sql = "SELECT * FROM KhachHang WHERE SoDienThoai = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
-   
+            ps.setString(1, SDT);
+            ResultSet rs = ps.executeQuery();
+            
+            if(rs.next())
+                return mapResultSetToKhachHang(rs);
+        }
+        return null;
+    }
+    //Them khach hang
+    public boolean insert(KhachHang kh, Connection conn)throws SQLException {        
+        String sql = "INSERT INTO KhachHang (TenKH,SoDienThoai,DiaChi) VALUES (?,?,?)";
+        
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, kh.getTenKH());
             ps.setString(2, kh.getSoDienThoai());
             ps.setString(3, kh.getDiaChi());
             
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     
     //Cap nhat khach hang
-    public boolean update(KhachHang kh){
+    public boolean update(KhachHang kh, Connection conn)throws SQLException{
         String sql =    "UPDATE KhachHang SET TenKH = ? , SoDienThoai = ? , DiaChi = ? WHERE MaKH = ?";
         
-        try(
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-                ){
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setString(1, kh.getTenKH());
             ps.setString(2, kh.getSoDienThoai());
             ps.setString(3, kh.getDiaChi());
             ps.setInt(4, kh.getMaKH());
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     
     //Xoa khach hang
-    public boolean delete(int MaKH){
+    public boolean delete(int MaKH, Connection conn)throws SQLException{
         String sql = "DELETE FROM KhachHang WHERE MaKH = ?";
         
-        try(
-                Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-                ){
+        try(PreparedStatement ps = conn.prepareStatement(sql)){
             ps.setInt(1, MaKH);
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
-    
-    
 }

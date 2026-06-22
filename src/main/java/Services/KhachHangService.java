@@ -11,6 +11,8 @@ package Services;
 
 import DAO.KhachHangDAO;
 import Model.KhachHang;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -38,13 +40,32 @@ public class KhachHangService {
     }
     
     //Thêm khách hàng
-    public boolean insert (KhachHang kh){
-        return khd.insert(kh);
+    public boolean insert (KhachHang kh,Connection conn){
+        try{
+            return khd.insert(kh, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     //Sửa thông tin khách hàng
-    public boolean update (KhachHang kh){
-        return khd.update(kh);
+    public boolean update (KhachHang kh,Connection conn){
+        try{
+            return khd.update(kh, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    //Tìm theo số điện thoại
+    public KhachHang findBySDT(String SDT,Connection conn) throws Exception{
+        try{
+            return khd.findBySoDienThoai(SDT, conn);
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return null;
     }
     
 }

@@ -75,54 +75,42 @@ public class ChiTietDichVuDAO {
         return list;
     }
     //Them chi tiet dich vu
-    public boolean insert(ChiTietDichVu ctdv){
+    public boolean insert(ChiTietDichVu ctdv, Connection conn)throws SQLException{
         
         String sql ="INSERT INTO ChiTietDichVu (MaPhieu,MaDV,DonGia) VALUES (?, ?, ?)";
         try(
-            Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
                 ){
                 ps.setInt(1, ctdv.getMaPhieu());
                 ps.setInt(2, ctdv.getMaDV());
                 ps.setBigDecimal(4, ctdv.getDonGia());
                 return ps.executeUpdate()>0;
-            }catch(Exception e){
-               e.printStackTrace();
             }
-        return false;
     }
     //Cap nhat chi tiet dich vu
-    public boolean update(ChiTietDichVu ctdv){
+    public boolean update(ChiTietDichVu ctdv, Connection conn)throws SQLException{
         String sql = "UPDATE ChiTietDichVu SET DonGia = ? WHERE MaPhieu = ? AND MaDV = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setBigDecimal(1, ctdv.getDonGia());
             ps.setInt(2, ctdv.getMaPhieu());
             ps.setInt(3, ctdv.getMaDV());
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     //Xoa chi tiet dich vu
-    public boolean delete(int MaPhieu , int MaDV){
+    public boolean delete(int MaPhieu , int MaDV, Connection conn)throws SQLException{
         String sql = "DELETE FROM ChiTietDichVu WHERE MaPhieu = ? AND MaDV = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setInt(1, MaPhieu);
             ps.setInt(2, MaDV);
             return ps.executeUpdate()>0;
-        }catch(Exception e){
-            e.printStackTrace();
         }
-        return false;
     }
     //Tính tổng tiền dịch vụ
     public BigDecimal tongTienDichVu(int maPhieu) {

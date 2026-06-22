@@ -88,11 +88,10 @@ public class DichVuDAO {
     }
     
     //Them dich vu
-    public boolean insert(DichVu dv){        
+    public boolean insert(DichVu dv, Connection conn)throws SQLException{        
         String sql ="INSERT INTO DichVu (TenDV, TienCong, TrangThai) VALUES(?,?,?)";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
    
@@ -100,18 +99,14 @@ public class DichVuDAO {
             ps.setBigDecimal(2, dv.getTienCong());
             ps.setBoolean(3, dv.isTrangThai());
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     
     //Cap nhat dich vu
-    public boolean update(DichVu dv){
+    public boolean update(DichVu dv, Connection conn)throws SQLException{
         String sql = "UPDATE DichVu SET TenDV = ? , TienCong = ? , TrangThai = ? WHERE MaDV = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setString(1, dv.getTenDV());
@@ -119,41 +114,30 @@ public class DichVuDAO {
             ps.setBoolean(3, dv.isTrangThai());
             ps.setInt(4, dv.getMaDV());
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     
     //Xoa dich vu
-    public boolean delete(int MaDV){
+    public boolean delete(int MaDV, Connection conn)throws SQLException{
         String sql = "DELETE FROM DichVu WHERE MaDV = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setInt(1, MaDV);
             return ps.executeUpdate()>0;
-        }catch(SQLException e){
-            e.printStackTrace();
         }
-        return false;
     }
     //Cập nhật trạng thái dịch vụ
-    public boolean updateTrangThai(int MaDV, boolean TrangThai){
+    public boolean updateTrangThai(int MaDV, boolean TrangThai, Connection conn)throws SQLException{
         String sql = "UPDATE DichVu SET TrangThai = ? WHERE MaDV = ?";
         
         try(
-                Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setBoolean(1, TrangThai);
             ps.setInt(2, MaDV);
             return ps.executeUpdate()>0;
-        }catch(Exception e){
-            e.printStackTrace();
         }
-        return false;
     }
 }
