@@ -23,7 +23,6 @@ import Services.KhachHangService;
 import Services.PhieuSuaChuaService;
 import Services.XeService;
 import Utils.ThreadPool;
-import java.sql.Timestamp;
 import javafx.scene.control.DatePicker;
 import java.time.LocalDate;
 

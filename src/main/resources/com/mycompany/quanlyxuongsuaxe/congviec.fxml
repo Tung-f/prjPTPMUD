@@ -146,9 +146,9 @@
                            </font>
                         </Label>
                         <Region maxWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnSaveAs" mnemonicParsing="false" onAction="#handleSaveAs" style="-fx-background-color: #f1f5f9;" text=" 💾 Save as" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="🖨 Update" />
-                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleThemMoi" style="-fx-background-color: #f1f5f9;" text="Cancel" />
+                        <Button fx:id="btnSaveAs" mnemonicParsing="false" onAction="#handleSaveAs" style="-fx-background-color: #f1f5f9;" text=" 💾 Lưu" />
+                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="🖨 In" />
+                        <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#handleThemMoi" style="-fx-background-color: #f1f5f9;" text="Hủy Bỏ" />
                      </children>
                   </HBox>
                   <GridPane hgap="10.0" vgap="10.0">
