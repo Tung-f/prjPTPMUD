@@ -10,6 +10,7 @@ package DAO;
  */
 import com.mycompany.quanlyxuongsuaxe.dao.DatabaseConnection;
 import Model.PhieuSuaChua;
+import Model.Xe;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,7 +37,7 @@ public class PhieuSuaChuaDAO {
         psc.setNgayHoanThanh(rs.getTimestamp("NgayHoanThanh"));
         psc.setTrangThai(rs.getString("TrangThai"));
         psc.setTongTien(rs.getBigDecimal("TongTien"));
-
+        
         return psc;
     }
 
@@ -45,7 +46,11 @@ public class PhieuSuaChuaDAO {
 
         List<PhieuSuaChua> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM PhieuSuaChua";
+        String sql =
+            "SELECT p.*, x.LoaiXe, x.MaKH, k.TenKH " +
+            "FROM PhieuSuaChua p " +
+            "JOIN Xe x ON p.MaXe = x.MaXe " +
+            "JOIN KhachHang k ON x.MaKH = k.MaKH";
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
@@ -54,7 +59,13 @@ public class PhieuSuaChuaDAO {
         ) {
 
             while (rs.next()) {
-                list.add(mapResultSetToPhieuSuaChua(rs));
+               
+                PhieuSuaChua p = mapResultSetToPhieuSuaChua(rs);
+
+                p.setLoaiXe(rs.getString("LoaiXe"));
+                p.setTenKH(rs.getString("TenKH"));
+
+                list.add(p);
             }
 
         } catch (Exception e) {
@@ -62,8 +73,7 @@ public class PhieuSuaChuaDAO {
         }
 
         return list;
-    }
-
+}
     // Tìm theo mã phiếu
     public PhieuSuaChua findByID(int maPhieu) {
 
@@ -302,4 +312,46 @@ public class PhieuSuaChuaDAO {
         return list;
     }
     
+    // tìm kiếm
+    public List<PhieuSuaChua> timKiem(String keyword) throws Exception {
+
+    List<PhieuSuaChua> list = new ArrayList<>();
+
+    String sql =
+        "SELECT DISTINCT p.*, x.LoaiXe, k.TenKH " +
+        "FROM PhieuSuaChua p " +
+        "JOIN Xe x ON p.MaXe = x.MaXe " +
+        "JOIN KhachHang k ON x.MaKH = k.MaKH " +
+        "WHERE k.TenKH COLLATE Latin1_General_CI_AI LIKE ? "+
+        "OR x.LoaiXe COLLATE Latin1_General_CI_AI LIKE ? "+
+        "OR x.BienSo COLLATE Latin1_General_CI_AI LIKE ? ";
+
+    try (
+        Connection conn = DatabaseConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql)
+    ) {
+
+        String search = "%" + keyword.toLowerCase() + "%";
+
+        ps.setString(1, search);
+        ps.setString(2, search);
+        ps.setString(3, search);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            while (rs.next()) {
+
+                PhieuSuaChua p = mapResultSetToPhieuSuaChua(rs);
+
+                p.setLoaiXe(rs.getString("LoaiXe"));
+                p.setTenKH(rs.getString("TenKH"));
+
+                list.add(p);
+            }
+        }
+    }
+        System.out.println("[" + keyword + "]");
+    return list;
+}
 }

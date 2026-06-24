@@ -327,4 +327,10 @@ public class PhieuSuaChuaService {
             }
         }
     }
+    public List<PhieuSuaChua> timKiem(String keyword) throws Exception {
+
+        PhieuSuaChuaDAO dao = new PhieuSuaChuaDAO();
+
+        return dao.timKiem(keyword);
+    }
 }

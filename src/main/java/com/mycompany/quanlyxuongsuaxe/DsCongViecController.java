@@ -39,16 +39,10 @@ public class DsCongViecController {
         // ĐÃ SỬA: Sửa chữ P hoa thành p thường để ăn vào biến toàn cục
         this.phieuSuaChua = p; 
         
-        XeDAO xd = new XeDAO();
-        Xe xe = xd.findByID(p.getMaXe());
-
-        KhachHangDAO khd = new KhachHangDAO();
-        KhachHang kh = khd.findByID(xe.getMaKH());
-
         lblNgayLap.setText(p.getNgayLap().toString());
         lblTrangThai.setText(p.getTrangThai());
-        lblTenXe.setText(xe.getLoaiXe());
-        lblKhachHang.setText(kh.getTenKH());
+        lblTenXe.setText(p.getLoaiXe());
+        lblKhachHang.setText(p.getTenKH());
     }
 
     @FXML

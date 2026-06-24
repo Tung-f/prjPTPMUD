@@ -85,6 +85,9 @@ public class CongViecController {
         txtXe.textProperty().addListener((obs, oldValue, newValue) -> {
         imgXe.setImage(hienThiAnh(newValue));
         });
+        txtTimKiem.textProperty().addListener((obs, oldValue, newValue) ->{
+        handleTim(newValue);});
+        
     }
               
 
@@ -326,4 +329,53 @@ public class CongViecController {
         }
     }
     
+    //////////////////////////Ô tìm kiếm////////////////////////////////////
+    
+    @FXML
+    private void handleTim(String keyword) {
+
+        ThreadPool.submit(() -> {
+
+            try {
+
+                List<PhieuSuaChua> danhSach
+                        = phieuSuaChuaService.timKiem(keyword);
+
+                Platform.runLater(() -> {
+
+                    try {
+
+                        vboxDanhSach.getChildren().clear();
+
+                        for (PhieuSuaChua p : danhSach) {
+
+                            FXMLLoader loader
+                                    = new FXMLLoader(getClass().getResource("dscongviec.fxml"));
+
+                            Parent card = loader.load();
+
+                            DsCongViecController controller
+                                    = loader.getController();
+
+                            controller.setData(p);
+
+                            controller.setOnCardSelected(phieuDuocChon -> {
+                                hienThiThongTinChiTiet(phieuDuocChon);
+                            });
+
+                            vboxDanhSach.getChildren().add(card);
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        });
+    }
 }

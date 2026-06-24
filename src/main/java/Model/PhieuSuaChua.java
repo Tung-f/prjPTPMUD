@@ -21,8 +21,29 @@ public class PhieuSuaChua {
     private Date NgayHoanThanh;
     private String TrangThai;
     private BigDecimal TongTien;
+    private String LoaiXe;
+    private String TenKH;
 
+    public PhieuSuaChua(String LoaiXe, String TenKH) {
+        this.LoaiXe = LoaiXe;
+        this.TenKH = TenKH;
+    }
 
+    public String getLoaiXe() {
+        return LoaiXe;
+    }
+
+    public String getTenKH() {
+        return TenKH;
+    }
+
+    public void setLoaiXe(String LoaiXe) {
+        this.LoaiXe = LoaiXe;
+    }
+
+    public void setTenKH(String TenKH) {
+        this.TenKH = TenKH;
+    }
     
 
     public PhieuSuaChua(int MaPhieu, int MaXe, int MaNV, Date NgayLap, Date NgayHoanThanh, String TrangThai, BigDecimal TongTien) {
