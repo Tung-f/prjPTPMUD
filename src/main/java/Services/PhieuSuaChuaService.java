@@ -148,7 +148,7 @@ public class PhieuSuaChuaService {
     }
 
     //Tạo phiếu
-    public boolean taoPhieuSuaChua(String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai) {
+    public boolean taoPhieuSuaChua(String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai,String HangXe) {
         Connection conn = null;
 
         try {
@@ -187,7 +187,7 @@ public class PhieuSuaChuaService {
                 xeMoi.setBienSo(bienSo);
                 xeMoi.setLoaiXe(loaiXe);
                 xeMoi.setMaKH(kh.getMaKH());
-
+                xeMoi.setHangXe(HangXe);
                 if (!xs.insert(xeMoi, conn)) {
                     throw new Exception("Không thể thêm xe");
                 }
@@ -252,7 +252,7 @@ public class PhieuSuaChuaService {
     }
 
     //update phieu
-    public boolean capNhatPhieuSuaChua(PhieuSuaChua phieu, String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai) {
+    public boolean capNhatPhieuSuaChua(PhieuSuaChua phieu, String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai,String HangXe) {
 
         Connection conn = null;
 
@@ -286,7 +286,7 @@ public class PhieuSuaChuaService {
             // 4. UPDATE XE
             xe.setLoaiXe(loaiXe);
             xe.setBienSo(bienSo);
-
+            xe.setHangXe(HangXe);
             if (!xs.update(xe, conn)) {
                 throw new Exception("Update xe thất bại");
             }

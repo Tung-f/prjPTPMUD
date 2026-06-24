@@ -23,8 +23,11 @@ import Services.KhachHangService;
 import Services.PhieuSuaChuaService;
 import Services.XeService;
 import Utils.ThreadPool;
+import java.net.URL;
 import javafx.scene.control.DatePicker;
 import java.time.LocalDate;
+import java.util.ResourceBundle;
+import javafx.scene.image.Image;
 
 public class CongViecController {
 
@@ -70,6 +73,8 @@ public class CongViecController {
     @FXML
     private TextField txtTimKiem;
 
+    @FXML
+    private TextField txtHangXe;
     private final PhieuSuaChuaService phieuSuaChuaService = new PhieuSuaChuaService();
     private PhieuSuaChua phieudangchon = null;
 
@@ -77,7 +82,11 @@ public class CongViecController {
     public void initialize() {
         cbTrangThai.getItems().addAll("Chờ sửa", "Đang sửa", "Đã hoàn thành", "Đã hủy");
         loadDanhSachCongViec();
+        txtXe.textProperty().addListener((obs, oldValue, newValue) -> {
+        imgXe.setImage(hienThiAnh(newValue));
+        });
     }
+              
 
     ////////////////////////////////// Chuyển tab ///////////////////////////
     private void loadPage(String fxml) throws IOException {
@@ -102,6 +111,10 @@ public class CongViecController {
     @FXML
     private void openNhanVien() throws IOException {
         loadPage("nhanvien.fxml");
+    }
+    @FXML
+    private void openBaoCao() throws IOException {
+        loadPage("baocao.fxml");
     }
 
     /////////////////////////////////// List ////////////////////////////////
@@ -176,7 +189,8 @@ public class CongViecController {
                     if (xe != null) {
                         txtXe.setText(xe.getLoaiXe());
                         txtBienSo.setText(xe.getBienSo());
-
+                        txtHangXe.setText(xe.getHangXe());
+                        
                         lblLoaiXe.setText(xe.getLoaiXe());
                         lblHangXe.setText(xe.getHangXe());
                         lblBienSo.setText(xe.getBienSo());
@@ -231,56 +245,46 @@ public class CongViecController {
         LocalDate ngayTao = txtNgayTao.getValue();
         String trangThai = cbTrangThai.getValue();
 
-        String tenKH = txtKhachHang.getText();
-        String sdt = txtSoDienThoai.getText();
-        String loaiXe = txtXe.getText();
-        String bienSo = txtBienSo.getText();
+        String tenKH = txtKhachHang.getText().trim();
+        String sdt = txtSoDienThoai.getText().trim();
+        String loaiXe = txtXe.getText().trim();
+        String bienSo = txtBienSo.getText().trim();
+        String hangXe = txtHangXe.getText().trim();
+        
 
-        if (ngayTao == null) {
-            System.out.println("Vui lòng chọn ngày lập!");
-            return;
-        }
-
-        if (trangThai == null || trangThai.trim().isEmpty()
-                || tenKH == null || tenKH.trim().isEmpty()
-                || sdt == null || sdt.trim().isEmpty()
-                || loaiXe == null || loaiXe.trim().isEmpty()
-                || bienSo == null || bienSo.trim().isEmpty()) {
-
+        if (tenKH == null || tenKH.isEmpty()
+                || sdt == null || sdt.isEmpty()
+                || loaiXe == null || loaiXe.isEmpty()
+                || bienSo == null || bienSo.isEmpty()) {
+                    
             System.out.println("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
-        tenKH = tenKH.trim();
-        sdt = sdt.trim();
-        loaiXe = loaiXe.trim();
-        bienSo = bienSo.trim();
-
-        // CHÚ Ý: Sử dụng java.sql.Date viết đầy đủ để tránh lỗi Import trùng lặp
         java.sql.Date ngayLap = java.sql.Date.valueOf(ngayTao);
 
-        // Tạo biến cục bộ để tránh lỗi block scope trong ThreadPool
+        
         final String finalTenKH = tenKH;
         final String finalSdt = sdt;
         final String finalLoaiXe = loaiXe;
         final String finalBienSo = bienSo;
         final String finalTrangThai = trangThai;
-
+        final String finalHangXe = hangXe;
         ThreadPool.submit(() -> {
             try {
                 boolean success;
 
                 if (phieudangchon == null) {
                     // Gọi hàm tạo mới
-                    success = phieuSuaChuaService.taoPhieuSuaChua(finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai);
+                    success = phieuSuaChuaService.taoPhieuSuaChua(finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai,finalHangXe);
                 } else {
                     // Gọi hàm cập nhật
-                    success = phieuSuaChuaService.capNhatPhieuSuaChua(phieudangchon, finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai);
+                    success = phieuSuaChuaService.capNhatPhieuSuaChua(phieudangchon, finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai,finalHangXe);
                 }
 
                 Platform.runLater(() -> {
                     if (success) {
-                        // Thay vì dùng System.out.println, hãy hiện Alert
+                        //   hiện Alert
                         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
                         alert.setTitle("Thông báo");
                         alert.setHeaderText(null);
@@ -307,4 +311,19 @@ public class CongViecController {
             }
         });
     }
+    
+    /////////////////////////////////Hiện ảnh xe////////////////////////////
+    
+    public Image hienThiAnh(String TenXe){
+        
+        if(TenXe == null||TenXe.trim().isEmpty())
+            return new Image(getClass().getResourceAsStream("/AnhXe/default.png"));
+        String tenXe = "/AnhXe/" + TenXe.trim() + ".png";
+        try{
+            return new Image(getClass().getResourceAsStream(tenXe));
+        }catch(Exception e){
+            return new Image(getClass().getResourceAsStream("/AnhXe/default.png"));
+        }
+    }
+    
 }

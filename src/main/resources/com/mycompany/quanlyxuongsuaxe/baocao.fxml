@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <VBox BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <HBox prefHeight="64.0" prefWidth="64.0" spacing="12.0" style="-fx-background-color: linear-gradient(to right,#4967dd,#3156c8);;">
+               <padding>
+                  <Insets bottom="10.0" left="16.0" right="16.0" top="10.0" />
+               </padding>
+               <children>
+                  <ImageView fitHeight="78.0" fitWidth="67.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@images/logo.png" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label minWidth="220.0" prefHeight="41.0" prefWidth="250.0" style="-fx-text-fill: white;" text="Motorbike Repair System" wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label style="-fx-text-fill: white;" text="Quản lý xưởng sửa xe máy" />
+                     </children>
+                  </VBox>
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </Region>
+                  <Button mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: white;" text="? Trợ giúp">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" style="-fx-background-color: transparent; -fx-text-fill: white;" text="⏻ Đăng xuất">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="45.0" prefWidth="200.0" spacing="25.0" style="-fx-background-color: white; -fx-border-color: #ddd;">
+               <padding>
+                  <Insets left="20.0" right="20.0" />
+               </padding>
+               <children>
+                  <Button maxHeight="29.0" maxWidth="120.0" minHeight="29.0" minWidth="120.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="🔧 Công việc">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button maxHeight="29.0" maxWidth="120.0" minHeight="29.0" minWidth="120.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="🛠 Dịch vụ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button maxHeight="29.0" maxWidth="120.0" minHeight="29.0" minWidth="120.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="👤 Khách hàng">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button maxHeight="29.0" maxWidth="120.0" minHeight="29.0" minWidth="120.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" style="-fx-background-color: transparen; -fx-font-weight: bold;" text="📊 Báo cáo">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button maxHeight="29.0" maxWidth="120.0" minHeight="29.0" minWidth="120.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="120.0" style="-fx-background-color: transparen; -fx-font-weight: bold;" text="👨‍🔧 Nhân viên">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <GridPane hgap="20.0" vgap="10.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="320.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="370.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+         <children>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Báo cáo" textFill="#1a00fc">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <Label style="-fx-font-weight: bold;" text="Từ ngày">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <DatePicker />
+                  <Label style="-fx-font-weight: bold;" text="Đến ngày">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <DatePicker />
+                  <Button mnemonicParsing="false" style="-fx-background-color: #2563eb; -fx-font-weight: bold;" text="Xem báo cáo" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-background-radius: 12; -fx-border-color: #ddd; -fx-border-radius: 12;" GridPane.columnIndex="1">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Thống kê doanh thu" textFill="#1a00fc">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </padding>
+                  </HBox>
+                  <LineChart>
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </LineChart>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #ddd; -fx-border-radius: 12;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <BarChart>
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;" GridPane.columnIndex="2">
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <children>
+                  <HBox prefHeight="60.0" prefWidth="200.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Tổng quan" textFill="#1a00fc">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" top="10.0" />
+                     </padding>
+                  </HBox>
+                  <VBox prefHeight="80.0" prefWidth="100.0" spacing="20.0">
+                     <children>
+                        <Label text="Tổng công việc">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Label" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="80.0" prefWidth="100.0" spacing="20.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Tổng doanh thu">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Label" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+                  <VBox prefHeight="80.0" prefWidth="100.0" spacing="20.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" text="Số khách hàng">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Label" />
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>
