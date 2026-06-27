@@ -12,6 +12,8 @@ import DAO.PhieuSuaChuaDAO;
 import DAO.ChiTietDichVuDAO;
 import DAO.ChiTietPhuTungDAO;
 import DAO.NhanVienDAO;
+import Model.ChiTietDichVu;
+import Model.DichVu;
 import Model.KhachHang;
 import Model.NhanVien;
 import Model.PhieuSuaChua;
@@ -20,6 +22,8 @@ import com.mycompany.quanlyxuongsuaxe.dao.DatabaseConnection;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.List;
@@ -38,8 +42,8 @@ public class PhieuSuaChuaService {
     }
 
     //Tìm kiếm bằng mã
-    public PhieuSuaChua findByID(int MaPhieu) {
-        return pscd.findByID(MaPhieu);
+    public PhieuSuaChua findByID(int MaPhieu,Connection conn) {
+        return pscd.findByID(MaPhieu,conn);
     }
 
     //Thêm phiếu sửa chữa
@@ -67,7 +71,7 @@ public class PhieuSuaChuaService {
 
     //Xóa phiếu sửa chữa
     public boolean delete(int Maphieu, Connection conn) throws Exception {
-        PhieuSuaChua psc = pscd.findByID(Maphieu);
+        PhieuSuaChua psc = pscd.findByID(Maphieu,conn);
         if (psc.getTrangThai().trim().equalsIgnoreCase("Hoàn Thành")) {
             throw new Exception("Đơn hàng đã hoàn thành , không thể xóa");
         }
@@ -118,9 +122,9 @@ public class PhieuSuaChuaService {
     }
 
     // Cập nhật tổng tiền
-    public boolean updateTongTien(int maPhieu, BigDecimal tongTien, Connection conn) {
+    public boolean updateTongTien(int maPhieu,List<DichVu> dsDichVu) {
         try {
-            return pscd.updateTongTien(maPhieu, tongTien, conn);
+            return pscd.updateTongTien(maPhieu,dsDichVu);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -147,8 +151,11 @@ public class PhieuSuaChuaService {
         return tongDichVu.add(tongPhuTung);
     }
 
+    
+    
     //Tạo phiếu
-    public boolean taoPhieuSuaChua(String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai,String HangXe) {
+    public boolean taoPhieuSuaChua(String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai, String hangXe, List<DichVu> dsDichVu) {
+
         Connection conn = null;
 
         try {
@@ -156,9 +163,10 @@ public class PhieuSuaChuaService {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
-            // BƯỚC 1: TÌM KHÁCH HÀNG
+            //---------------------- KHÁCH HÀNG ----------------------//
             KhachHangService khs = new KhachHangService();
-            KhachHang kh = khs.findBySDT(sdt,conn);
+
+            KhachHang kh = khs.findBySDT(sdt, conn);
 
             if (kh == null) {
 
@@ -167,77 +175,113 @@ public class PhieuSuaChuaService {
                 khMoi.setSoDienThoai(sdt);
 
                 if (!khs.insert(khMoi, conn)) {
-                    throw new Exception("Không thể thêm khách hàng");
+                    throw new Exception("Không thể thêm khách hàng.");
                 }
 
-                kh = khs.findBySDT(sdt,conn);
+                kh = khs.findBySDT(sdt, conn);
 
                 if (kh == null) {
-                    throw new Exception("Không tìm thấy khách hàng vừa tạo");
+                    throw new Exception("Không tìm thấy khách hàng vừa tạo.");
                 }
             }
 
-            // BƯỚC 2: TÌM XE
+            //---------------------- XE ----------------------//
             XeService xs = new XeService();
-            Xe xe = xs.findByBienSo(bienSo,conn);
+
+            Xe xe = xs.findByBienSo(bienSo, conn);
 
             if (xe == null) {
 
                 Xe xeMoi = new Xe();
+
                 xeMoi.setBienSo(bienSo);
                 xeMoi.setLoaiXe(loaiXe);
+                xeMoi.setHangXe(hangXe);
                 xeMoi.setMaKH(kh.getMaKH());
-                xeMoi.setHangXe(HangXe);
+
                 if (!xs.insert(xeMoi, conn)) {
-                    throw new Exception("Không thể thêm xe");
+                    throw new Exception("Không thể thêm xe.");
                 }
 
-                xe = xs.findByBienSo(bienSo,conn);
+                xe = xs.findByBienSo(bienSo, conn);
 
                 if (xe == null) {
-                    throw new Exception("Không tìm thấy xe vừa tạo");
+                    throw new Exception("Không tìm thấy xe vừa tạo.");
                 }
             }
 
-            // BƯỚC 3: TẠO PHIẾU
+            //---------------------- NHÂN VIÊN ----------------------//
+            NhanVienService nvs = new NhanVienService();
+
+            int maNV = nvs.findNhanVienRanhNhat(conn);
+
+            if (maNV == -1) {
+                throw new Exception("Hiện không có nhân viên rảnh.");
+            }
+
+            //---------------------- PHIẾU ----------------------//
             PhieuSuaChua phieu = new PhieuSuaChua();
 
             phieu.setMaXe(xe.getMaXe());
             phieu.setNgayLap(ngayLap);
             phieu.setTrangThai(trangThai);
+            phieu.setMaNV(maNV);
             phieu.setTongTien(BigDecimal.ZERO);
-            NhanVienService nvs = new NhanVienService(); 
-        int  nvRanh = nvs.findNhanVienRanhNhat(conn); // Gọi hàm của bạn
 
-        if (nvRanh == -1) {
-            throw new Exception("Không thể tạo phiếu vì hiện tại không có nhân viên nào đang rảnh!");
-        }
-        phieu.setMaNV(nvRanh); // Gán mã nhân viên vào phiếu
             if (!pscd.insert(phieu, conn)) {
-                throw new Exception("Không thể tạo phiếu sửa chữa");
+                throw new Exception("Không thể tạo phiếu sửa chữa.");
             }
 
+            //---------------------- CHI TIẾT DỊCH VỤ ----------------------//
+            ChiTietDichVuService ctdvService = new ChiTietDichVuService();
+
+            BigDecimal tongTien = BigDecimal.ZERO;
+
+            if (dsDichVu != null) {
+
+                for (DichVu dv : dsDichVu) {
+
+                    ChiTietDichVu ct = new ChiTietDichVu();
+
+                    ct.setMaPhieu(phieu.getMaPhieu());
+                    ct.setMaDV(dv.getMaDV());
+                    ct.setDonGia(dv.getTienCong());
+
+                    if (!ctdvService.insert(ct, conn)) {
+                        throw new Exception("Không thể thêm chi tiết dịch vụ.");
+                    }
+
+                    tongTien = tongTien.add(dv.getTienCong());
+                }
+            }
+
+            //---------------------- CẬP NHẬT TỔNG TIỀN ----------------------//
+            phieu.setTongTien(tongTien);
+
+            if (!pscd.updateTongTien(phieu.getMaPhieu(),dsDichVu)) {
+                throw new Exception("Không thể cập nhật tổng tiền.");
+            }
+
+            //---------------------- COMMIT ----------------------//
             conn.commit();
 
             return true;
 
         } catch (Exception e) {
+    System.out.println("====== LỖI CHI TIẾT TẠI ĐÂY ======");
+    e.printStackTrace(); // Nó sẽ chỉ rõ lỗi do Insert ChiTiet hay do gì
+    System.out.println("==================================");
 
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-
-            System.out.println("Lỗi tạo phiếu:");
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage(), e);
-            
-            
-
-        } finally {
+    try {
+        if (conn != null) {
+            conn.rollback();
+        }
+    } catch (SQLException ex) {
+        ex.printStackTrace();
+    }
+    return false;
+}
+         finally {
 
             try {
                 if (conn != null) {
@@ -247,68 +291,105 @@ public class PhieuSuaChuaService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }
 
+        }
     }
 
     //update phieu
-    public boolean capNhatPhieuSuaChua(PhieuSuaChua phieu, String tenKH, String sdt, String loaiXe, String bienSo, Date ngayLap, String trangThai,String HangXe) {
+    public boolean capNhatPhieuSuaChua(PhieuSuaChua phieu,
+            String tenKH,
+            String sdt,
+            String loaiXe,
+            String bienSo,
+            Date ngayLap,
+            String trangThai,
+            String hangXe,
+            List<DichVu> dsDichVu) {
 
         Connection conn = null;
 
         try {
+
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
 
             XeService xs = new XeService();
             KhachHangService khs = new KhachHangService();
+            ChiTietDichVuService ctdvService = new ChiTietDichVuService();
 
-            // 1. Lấy xe theo phiếu
+            //------------------- XE --------------------//
             Xe xe = xs.findByID(phieu.getMaXe());
+
             if (xe == null) {
-                throw new Exception("Không tìm thấy xe");
+                throw new Exception("Không tìm thấy xe.");
             }
 
-            // 2. Lấy khách hàng
+            //---------------- KHÁCH HÀNG ----------------//
             KhachHang kh = khs.findByID(xe.getMaKH());
+
             if (kh == null) {
-                throw new Exception("Không tìm thấy khách hàng");
+                throw new Exception("Không tìm thấy khách hàng.");
             }
 
-            // 3. UPDATE KHÁCH HÀNG
             kh.setTenKH(tenKH);
             kh.setSoDienThoai(sdt);
 
             if (!khs.update(kh, conn)) {
-                throw new Exception("Update khách hàng thất bại");
+                throw new Exception("Cập nhật khách hàng thất bại.");
             }
 
-            // 4. UPDATE XE
+            //-------------------- XE --------------------//
             xe.setLoaiXe(loaiXe);
             xe.setBienSo(bienSo);
-            xe.setHangXe(HangXe);
+            xe.setHangXe(hangXe);
+
             if (!xs.update(xe, conn)) {
-                throw new Exception("Update xe thất bại");
+                throw new Exception("Cập nhật xe thất bại.");
             }
 
-            // 5. UPDATE PHIẾU
+            //------------------- PHIẾU ------------------//
             phieu.setNgayLap(ngayLap);
             phieu.setTrangThai(trangThai);
 
+            
             if (!update(phieu, conn)) {
-                throw new Exception("Update phiếu thất bại");
+                throw new Exception("Cập nhật phiếu thất bại.");
+            }
+            System.out.println("3");
+
+            //---------------- XÓA CHI TIẾT CŨ ----------------//
+            boolean a= ctdvService.delete(phieu.getMaPhieu(), conn);
+            System.out.println("1");
+            if (!a) {
+                throw new Exception("Không thể xóa chi tiết dịch vụ cũ.");
             }
 
+            //---------------- THÊM LẠI CHI TIẾT ----------------//
+            for (DichVu dv : dsDichVu) {
+
+                ChiTietDichVu ct = new ChiTietDichVu();
+
+                ct.setMaPhieu(phieu.getMaPhieu());
+                ct.setMaDV(dv.getMaDV());
+                ct.setDonGia(dv.getTienCong());
+                
+                boolean b =ctdvService.insert(ct, conn);
+                System.out.println("2");
+                if (!b) {
+                    throw new Exception("Không thể thêm chi tiết dịch vụ.");
+                }
+
+            }
             conn.commit();
             return true;
 
         } catch (Exception e) {
-
             try {
                 if (conn != null) {
                     conn.rollback();
                 }
             } catch (SQLException ex) {
+                
                 ex.printStackTrace();
             }
 
@@ -325,12 +406,12 @@ public class PhieuSuaChuaService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
         }
     }
+    
+    
     public List<PhieuSuaChua> timKiem(String keyword) throws Exception {
-
-        PhieuSuaChuaDAO dao = new PhieuSuaChuaDAO();
-
-        return dao.timKiem(keyword);
+        return pscd.timKiem(keyword);
     }
 }

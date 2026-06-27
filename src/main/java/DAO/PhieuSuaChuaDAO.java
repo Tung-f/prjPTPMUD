@@ -8,6 +8,7 @@ package DAO;
  *
  * @author Admin
  */
+import Model.DichVu;
 import com.mycompany.quanlyxuongsuaxe.dao.DatabaseConnection;
 import Model.PhieuSuaChua;
 import Model.Xe;
@@ -75,12 +76,12 @@ public class PhieuSuaChuaDAO {
         return list;
 }
     // Tìm theo mã phiếu
-    public PhieuSuaChua findByID(int maPhieu) {
+    public PhieuSuaChua findByID(int maPhieu,Connection conn) {
 
         String sql = "SELECT * FROM PhieuSuaChua WHERE MaPhieu = ?";
 
         try (
-                Connection conn = DatabaseConnection.getConnection();
+                
                 PreparedStatement ps = conn.prepareStatement(sql)
         ) {
 
@@ -213,8 +214,9 @@ public class PhieuSuaChuaDAO {
             ps.setString(5, psc.getTrangThai());
             ps.setBigDecimal(6, psc.getTongTien());
             ps.setInt(7, psc.getMaPhieu());
+            int row = ps.executeUpdate();
 
-            return ps.executeUpdate() > 0;
+return row > 0;
 
         }
     }
@@ -249,11 +251,19 @@ public class PhieuSuaChuaDAO {
     }
 
     // Cập nhật tổng tiền
-    public boolean updateTongTien(int maPhieu, BigDecimal tongTien, Connection conn)throws SQLException {
-
+    public boolean updateTongTien(int maPhieu,List<DichVu> dsDichVu)throws SQLException {
+        BigDecimal tongTien = BigDecimal.ZERO;
+        for (DichVu dv : dsDichVu) {
+                if (dv.getTienCong() != null){       
+                    tongTien = tongTien.add(dv.getTienCong());
+                }         
+            }
+            
         String sql = "UPDATE PhieuSuaChua SET TongTien = ? WHERE MaPhieu = ?";
 
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (
+                Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setBigDecimal(1, tongTien);
             ps.setInt(2, maPhieu);
@@ -340,7 +350,6 @@ public class PhieuSuaChuaDAO {
         ResultSet rs = ps.executeQuery();
 
         while (rs.next()) {
-            while (rs.next()) {
 
                 PhieuSuaChua p = mapResultSetToPhieuSuaChua(rs);
 
@@ -348,7 +357,7 @@ public class PhieuSuaChuaDAO {
                 p.setTenKH(rs.getString("TenKH"));
 
                 list.add(p);
-            }
+            
         }
     }
         System.out.println("[" + keyword + "]");
