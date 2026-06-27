@@ -16,8 +16,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ToggleGroup?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.quanlyxuongsuaxe.DichVuController">
    <top>
       <VBox BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -63,27 +64,27 @@
                   <Insets left="20.0" right="20.0" />
                </padding>
                <children>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="🔧 Công việc">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="🔧 Công việc"  onAction="#moCongViec">
                      <font>
                         <Font name="Segoe UI" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="🛠 Dịch vụ">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="🛠 Dịch vụ"  onAction="#moDichVu">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="👤 Khách hàng">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="👤 Khách hàng"  onAction="#moKhachHang">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparen; -fx-font-weight: bold;" text="📊 Báo cáo">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="📊 Báo cáo"  onAction="#moBaoCao">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparen; -fx-font-weight: bold;" text="👨‍🔧 Nhân viên">
+                  <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="117.0" style="-fx-background-color: transparent; -fx-font-weight: bold;" text="👨‍🔧 Nhân viên"  onAction="#moNhanVien">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -99,7 +100,7 @@
             <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
          </padding>
          <children>
-            <VBox prefHeight="200.0" prefWidth="320.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; fex-effect: dropshadow(gaussian, rgba(0,0,0,0.12),15,0,0,3);">
+            <VBox prefHeight="200.0" prefWidth="320.0" spacing="10.0" style="-fx-background-color: #ffffff; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12),15,0,0,3);">
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0" spacing="12.0">
                      <children>
@@ -109,17 +110,17 @@
                            </font>
                         </Label>
                         <Region maxWidth="-Infinity" prefHeight="36.0" prefWidth="55.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #2563eb; fox-font-weight: bold;" text="+ Thêm mới" textFill="WHITE" />
+                        <Button mnemonicParsing="false" style="-fx-background-color: #2563eb; -fx-font-weight: bold;" onAction="#themDichVu" text="+ Thêm mới" textFill="WHITE" />
                      </children>
                   </HBox>
                   <HBox maxHeight="-Infinity" prefHeight="27.0" prefWidth="200.0">
                      <children>
-                        <TextField maxWidth="-Infinity" prefWidth="300.0" promptText="Tìm kiếm..." style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 5;" />
+                        <TextField fx:id="txtTimKiem" onKeyReleased="#timKiem" maxWidth="-Infinity" prefWidth="300.0" promptText="Tìm kiếm..." style="-fx-background-color: #f8fafc; -fx-border-color: #cbd5e1; -fx-border-radius: 5;" />
                      </children>
                   </HBox>
                   <ScrollPane maxHeight="-Infinity" prefHeight="470.0" prefWidth="200.0" style="-fx-background-color: transparent; -fx-border-color: transparent;">
                      <content>
-                        <VBox alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: transparent; -fx-background-radius: 8;">
+                        <VBox fx:id="vboxDanhSach" alignment="TOP_CENTER" spacing="10.0" style="-fx-background-color: transparent; -fx-background-radius: 8;">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -144,9 +145,9 @@
                            </font>
                         </Label>
                         <Region maxWidth="-Infinity" prefHeight="200.0" prefWidth="230.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text=" 💾 Save as" />
+                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" onAction="#luuDichVu" text=" 💾 Save as" />
                         <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="🖨 Print" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="Delete" />
+                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" onAction="#xoaDichVu" text="Delete" />
                      </children>
                   </HBox>
                   <GridPane hgap="30.0" vgap="20.0">
@@ -163,26 +164,14 @@
                      <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="30.0" />
                      </VBox.margin>
-                     <children>
-                        <Label style="-fx-font-weight: bold;" text="Mã dịch vụ">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <Label style="-fx-font-weight: bold;" text="Tên dịch vụ" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <TextField GridPane.rowIndex="1" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label style="-fx-font-weight: bold;" text="Đơn giá (VND)" GridPane.rowIndex="2">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                        </Label>
-                        <TextField GridPane.rowIndex="3" />
-                     </children>
+                    <children>
+                        <Label text="Mã dịch vụ"/>
+                        <TextField fx:id="txtMaDV" editable="false" GridPane.columnIndex="1"/>
+                        <Label text="Tên dịch vụ" GridPane.rowIndex="1"/>
+                        <TextField fx:id="txtTenDV" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Đơn giá (VND)" GridPane.rowIndex="2"/>
+                        <TextField fx:id="txtTienCong" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                    </children>
                   </GridPane>
                   <Label style="-fx-font-weight: bold;" text="Trạng thái">
                      <font>
@@ -191,12 +180,15 @@
                   </Label>
                   <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0" spacing="50.0">
                      <children>
-                        <RadioButton mnemonicParsing="false" prefWidth="145.0" style="-fx-font-weight: bold;" text="Đang sử dụng">
+                        <RadioButton mnemonicParsing="false" prefWidth="145.0" style="-fx-font-weight: bold;" fx:id="rdDangSuDung" text="Đang sử dụng">
                            <font>
                               <Font size="14.0" />
                            </font>
+                            <toggleGroup>
+                                <ToggleGroup fx:id="trangThaiGroup"/>
+                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton mnemonicParsing="false" prefWidth="145.0" style="-fx-font-weight: bold;" text="Ngừng cung cấp">
+                        <RadioButton mnemonicParsing="false" prefWidth="145.0" style="-fx-font-weight: bold;" fx:id="rdNgung"  text="Ngừng cung cấp" toggleGroup="$trangThaiGroup">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -225,7 +217,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label />
+                        <Label fx:id="lblTongDoanhThu" style="-fx-font-size:20; -fx-font-weight:bold;"/>
                      </children>
                   </VBox>
                </children>

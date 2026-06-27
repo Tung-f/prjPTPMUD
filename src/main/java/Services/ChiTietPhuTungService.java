@@ -38,7 +38,7 @@ public class ChiTietPhuTungService {
     //Thêm chi tiết phụ tùng
     public boolean insert (ChiTietPhuTung ctpt,Connection conn)throws Exception{
         PhieuSuaChuaDAO pscd = new PhieuSuaChuaDAO();
-        PhieuSuaChua psc = pscd.findByID(ctpt.getMaPhieu());
+        PhieuSuaChua psc = pscd.findByID(ctpt.getMaPhieu(),conn);
         if(psc.getTrangThai().trim().equalsIgnoreCase("Hoàn thành"))
             throw new Exception("Đơn hàng đã hoàn thành , không thể sửa !");
         try{
@@ -52,7 +52,7 @@ public class ChiTietPhuTungService {
     //Sửa chi tiết phụ tùng
     public boolean update (ChiTietPhuTung ctpt,Connection conn)throws Exception{
         PhieuSuaChuaDAO pscd = new PhieuSuaChuaDAO();
-        PhieuSuaChua psc = pscd.findByID(ctpt.getMaPhieu());
+        PhieuSuaChua psc = pscd.findByID(ctpt.getMaPhieu(),conn);
         if(psc.getTrangThai().trim().equalsIgnoreCase("Hoàn thành"))
             throw new Exception("Đơn hàng đã hoàn thành , không thể sửa !");
         try{
@@ -66,7 +66,7 @@ public class ChiTietPhuTungService {
     //Xóa chi tiết phụ tùng
     public boolean delete (int MaPhieu, int MaPT,Connection conn)throws Exception{
         PhieuSuaChuaDAO pscd = new PhieuSuaChuaDAO();
-        PhieuSuaChua psc = pscd.findByID(MaPhieu);
+        PhieuSuaChua psc = pscd.findByID(MaPhieu,conn);
         if(psc.getTrangThai().trim().equalsIgnoreCase("Hoàn thành"))
             throw new Exception("Đơn hàng đã hoàn thành , không thể sửa !");
         try{

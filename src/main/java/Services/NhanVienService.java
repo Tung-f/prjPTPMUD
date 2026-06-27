@@ -129,4 +129,20 @@ public class NhanVienService {
 
         return result;
             }
+    
+    public boolean delete(int MaNV, Connection conn)throws Exception{
+
+    if(!Utils.Auth.user.getVaiTro()
+            .equalsIgnoreCase("Admin"))
+        throw new Exception("Bạn không có quyền này!");
+
+    try{
+        return nvd.delete(MaNV, conn);
+    }
+    catch(SQLException e){
+        e.printStackTrace();
+    }
+
+    return false;
+}
 }

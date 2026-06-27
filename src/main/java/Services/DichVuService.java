@@ -63,13 +63,26 @@ public class DichVuService {
     public boolean updateTrangThai (int MaDV,boolean TrangThai,Connection conn)throws Exception{
         if(!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
             throw new Exception ("Bạn không có quyền này !");
-        
         try{
             return dvd.updateTrangThai(MaDV, TrangThai, conn);
         }catch(SQLException e){
             e.printStackTrace();
         }
         return false;
-    }
+    }  
     
+    // Xóa dịch vụ
+    public boolean delete(int maDV, Connection conn) throws Exception {
+
+        if (!Utils.Auth.user.getVaiTro().equalsIgnoreCase("Admin"))
+            throw new Exception("Bạn không có quyền này !");
+
+        try {
+            return dvd.delete(maDV, conn);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

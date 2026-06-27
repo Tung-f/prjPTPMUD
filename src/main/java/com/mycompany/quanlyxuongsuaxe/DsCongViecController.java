@@ -27,7 +27,7 @@ public class DsCongViecController {
     @FXML
     private HBox rootCard;
 
-    private PhieuSuaChua phieuSuaChua; // Biến viết thường chữ p đầu
+    private PhieuSuaChua phieuSuaChua; 
     private Consumer<PhieuSuaChua> onCardSelectedListener;
 
     public void setOnCardSelected(Consumer<PhieuSuaChua> listener) {
@@ -36,12 +36,11 @@ public class DsCongViecController {
 
     @FXML
     public void setData(PhieuSuaChua p) {
-        // ĐÃ SỬA: Sửa chữ P hoa thành p thường để ăn vào biến toàn cục
         this.phieuSuaChua = p; 
         
         lblNgayLap.setText(p.getNgayLap().toString());
         lblTrangThai.setText(p.getTrangThai());
-        lblTenXe.setText(p.getLoaiXe());
+        lblTenXe.setText(p.getLoaiXe().toUpperCase());
         lblKhachHang.setText(p.getTenKH());
     }
 

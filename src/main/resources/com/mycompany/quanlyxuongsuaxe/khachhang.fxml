@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.quanlyxuongsuaxe.KhachHangController">
    <top>
       <VBox BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -108,7 +108,7 @@
                            </font>
                         </Label>
                         <Region maxWidth="-Infinity" prefHeight="36.0" prefWidth="30.0" HBox.hgrow="ALWAYS" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #2563eb; fox-font-weight: bold;" text="+ Thêm mới" textFill="WHITE" />
+                        <Button mnemonicParsing="false" onAction="#themKhachHang" style="-fx-background-color: #2563eb; fox-font-weight: bold;" text="+ Thêm mới" textFill="WHITE" />
                      </children>
                   </HBox>
                   <HBox maxHeight="-Infinity" prefHeight="27.0" prefWidth="200.0">
@@ -141,7 +141,7 @@
                         <Region maxWidth="-Infinity" prefHeight="200.0" prefWidth="520.0" HBox.hgrow="ALWAYS" />
                         <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text=" 💾 Save as" />
                         <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="🖨 Print" />
-                        <Button mnemonicParsing="false" style="-fx-background-color: #f1f5f9;" text="Delete" />
+                        <Button mnemonicParsing="false" onAction="#xoaKhachHang" style="-fx-background-color: #f1f5f9;" text="Delete" />
                      </children>
                   </HBox>
                   <GridPane hgap="10.0" vgap="20.0">
@@ -179,10 +179,10 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <TextField GridPane.columnIndex="1" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="txtMaKH" GridPane.columnIndex="1" />
+                        <TextField fx:id="txtTenKH" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtSDT" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtBienSo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                </children>

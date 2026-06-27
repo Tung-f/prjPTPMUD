@@ -1,5 +1,7 @@
 package com.mycompany.quanlyxuongsuaxe;
 
+import Model.ChiTietDichVu;
+import Model.DichVu;
 import Model.KhachHang;
 import java.io.IOException;
 import java.util.List;
@@ -19,15 +21,27 @@ import javafx.scene.layout.VBox;
 
 import Model.PhieuSuaChua;
 import Model.Xe;
+import Services.ChiTietDichVuService;
+import Services.DichVuService;
 import Services.KhachHangService;
 import Services.PhieuSuaChuaService;
 import Services.XeService;
 import Utils.ThreadPool;
+import java.math.BigDecimal;
 import java.net.URL;
 import javafx.scene.control.DatePicker;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.stage.Modality;
 
 public class CongViecController {
 
@@ -83,13 +97,18 @@ public class CongViecController {
         cbTrangThai.getItems().addAll("Chờ sửa", "Đang sửa", "Đã hoàn thành", "Đã hủy");
         loadDanhSachCongViec();
         txtXe.textProperty().addListener((obs, oldValue, newValue) -> {
-        imgXe.setImage(hienThiAnh(newValue));
+            imgXe.setImage(hienThiAnh(newValue));
         });
-        txtTimKiem.textProperty().addListener((obs, oldValue, newValue) ->{
-        handleTim(newValue);});
-        
+        txtTimKiem.textProperty().addListener((obs, oldValue, newValue) -> {
+            handleTim(newValue);
+        });
+
+        colTenDV.setCellValueFactory(new PropertyValueFactory<>("TenDV"));
+        colTienCong.setCellValueFactory(new PropertyValueFactory<>("TienCong"));
+
+        tbDichVu.setItems(dsDichVu);
+        setupColThaoTac();
     }
-              
 
     ////////////////////////////////// Chuyển tab ///////////////////////////
     private void loadPage(String fxml) throws IOException {
@@ -115,6 +134,7 @@ public class CongViecController {
     private void openNhanVien() throws IOException {
         loadPage("nhanvien.fxml");
     }
+
     @FXML
     private void openBaoCao() throws IOException {
         loadPage("baocao.fxml");
@@ -125,7 +145,6 @@ public class CongViecController {
         ThreadPool.submit(() -> {
             try {
                 List<PhieuSuaChua> danhSach = phieuSuaChuaService.getAll();
-
                 Platform.runLater(() -> {
                     try {
                         vboxDanhSach.getChildren().clear();
@@ -156,6 +175,7 @@ public class CongViecController {
 
     ////////////////////////// Sự kiện hiển thị chi tiết ////////////////////////
     public void hienThiThongTinChiTiet(PhieuSuaChua p) {
+
         if (p == null) {
             return;
         }
@@ -163,59 +183,106 @@ public class CongViecController {
         this.phieudangchon = p;
 
         ThreadPool.submit(() -> {
+
             try {
+
                 XeService xs = new XeService();
                 Xe xe = xs.findByID(p.getMaXe());
 
                 KhachHangService khs = new KhachHangService();
                 KhachHang kh = (xe != null) ? khs.findByID(xe.getMaKH()) : null;
 
+                // Lấy chi tiết dịch vụ
+                ChiTietDichVuService ctdvService = new ChiTietDichVuService();
+                List<ChiTietDichVu> dsCTDV = ctdvService.findByMaPhieu(p.getMaPhieu());
+
+                // Lấy thông tin dịch vụ
+                DichVuService dvService = new DichVuService();
+
+                ObservableList<DichVu> ds = FXCollections.observableArrayList();
+
+                for (ChiTietDichVu ct : dsCTDV) {
+
+                    DichVu dv = dvService.findByID(ct.getMaDV());
+
+                    if (dv != null) {
+                        ds.add(dv);
+                    }
+
+                }
+
                 Platform.runLater(() -> {
 
+                    // Thông tin phiếu
                     if (p.getNgayLap() != null) {
 
-                        java.sql.Timestamp timestamp = new java.sql.Timestamp(p.getNgayLap().getTime());
-                        txtNgayTao.setValue(timestamp.toLocalDateTime().toLocalDate());
+                        txtNgayTao.setValue(
+                                new java.sql.Timestamp(p.getNgayLap().getTime())
+                                        .toLocalDateTime()
+                                        .toLocalDate()
+                        );
+
                     } else {
+
                         txtNgayTao.setValue(null);
+
                     }
+
                     cbTrangThai.setValue(p.getTrangThai());
 
+                    // Khách hàng
                     if (kh != null) {
+
                         txtKhachHang.setText(kh.getTenKH());
                         txtSoDienThoai.setText(kh.getSoDienThoai());
+
                     } else {
+
                         txtKhachHang.clear();
                         txtSoDienThoai.clear();
+
                     }
 
+                    // Xe
                     if (xe != null) {
+
                         txtXe.setText(xe.getLoaiXe());
                         txtBienSo.setText(xe.getBienSo());
                         txtHangXe.setText(xe.getHangXe());
-                        
+
                         lblLoaiXe.setText(xe.getLoaiXe());
                         lblHangXe.setText(xe.getHangXe());
                         lblBienSo.setText(xe.getBienSo());
+
                     } else {
+
                         txtXe.clear();
                         txtBienSo.clear();
+
                         lblLoaiXe.setText("");
                         lblHangXe.setText("");
                         lblBienSo.setText("");
+
                     }
+
+                    // Đổ dịch vụ lên TableView
+                    dsDichVu.setAll(ds);
+
                 });
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
         });
+
     }
 
     ////////////////////////////////////////Sự kiện nút thêm mới /////////////////////////////////////
     
     @FXML
     private void handleThemMoi() {
-
+        dsDichVu.clear();
         this.phieudangchon = null;
 
         txtNgayTao.setValue(null);
@@ -253,20 +320,18 @@ public class CongViecController {
         String loaiXe = txtXe.getText().trim();
         String bienSo = txtBienSo.getText().trim();
         String hangXe = txtHangXe.getText().trim();
-        
 
         if (tenKH == null || tenKH.isEmpty()
                 || sdt == null || sdt.isEmpty()
                 || loaiXe == null || loaiXe.isEmpty()
                 || bienSo == null || bienSo.isEmpty()) {
-                    
+
             System.out.println("Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
         java.sql.Date ngayLap = java.sql.Date.valueOf(ngayTao);
 
-        
         final String finalTenKH = tenKH;
         final String finalSdt = sdt;
         final String finalLoaiXe = loaiXe;
@@ -279,10 +344,11 @@ public class CongViecController {
 
                 if (phieudangchon == null) {
                     // Gọi hàm tạo mới
-                    success = phieuSuaChuaService.taoPhieuSuaChua(finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai,finalHangXe);
+                    success = phieuSuaChuaService.taoPhieuSuaChua(finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai, finalHangXe, dsDichVu);
                 } else {
                     // Gọi hàm cập nhật
-                    success = phieuSuaChuaService.capNhatPhieuSuaChua(phieudangchon, finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai,finalHangXe);
+                    success = phieuSuaChuaService.capNhatPhieuSuaChua(phieudangchon, finalTenKH, finalSdt, finalLoaiXe, finalBienSo, ngayLap, finalTrangThai, finalHangXe, dsDichVu);
+                    phieuSuaChuaService.updateTongTien(phieudangchon.getMaPhieu(), dsDichVu);
                 }
 
                 Platform.runLater(() -> {
@@ -314,21 +380,22 @@ public class CongViecController {
             }
         });
     }
-    
+
     /////////////////////////////////Hiện ảnh xe////////////////////////////
     
-    public Image hienThiAnh(String TenXe){
-        
-        if(TenXe == null||TenXe.trim().isEmpty())
+    public Image hienThiAnh(String TenXe) {
+
+        if (TenXe == null || TenXe.trim().isEmpty()) {
             return new Image(getClass().getResourceAsStream("/AnhXe/default.png"));
+        }
         String tenXe = "/AnhXe/" + TenXe.trim() + ".png";
-        try{
+        try {
             return new Image(getClass().getResourceAsStream(tenXe));
-        }catch(Exception e){
+        } catch (Exception e) {
             return new Image(getClass().getResourceAsStream("/AnhXe/default.png"));
         }
     }
-    
+
     //////////////////////////Ô tìm kiếm////////////////////////////////////
     
     @FXML
@@ -377,5 +444,95 @@ public class CongViecController {
             }
 
         });
+    }
+    ///////////////////////////////////Sự kiện nút thêm dịch vụ//////////////////
+    
+    @FXML
+    private Button btnThemDichVu;
+
+    @FXML
+    private TableView tbDichVu;
+    @FXML
+    private TableColumn<DichVu, Integer> colTenDV;
+    @FXML
+    private TableColumn<DichVu, BigDecimal> colTienCong;
+    @FXML
+    private TableColumn colThaoTac;
+    private ObservableList<DichVu> dsDichVu = FXCollections.observableArrayList();
+
+    private void handleThemDichVu() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("chondichvu.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            ChonDichVuController controller
+                    = loader.getController();
+            //chặn thao tác với cửa số chính
+            stage.initModality(Modality.APPLICATION_MODAL);
+            // Không cho resize (tùy chọn)
+            stage.setResizable(false);
+            controller.setSelectedDichVu(new ArrayList<>(dsDichVu));
+
+            controller.loadDichVu();
+            stage.setResizable(false);
+
+            // Tính toán vị trí
+            stage.setOnShown(e -> {
+                Bounds bounds = btnThemDichVu.localToScreen(btnThemDichVu.getBoundsInLocal());
+
+                // Căn popup ngay phía trên nút
+                stage.setX(bounds.getMinX()+100);
+
+                stage.setY(bounds.getMinY() - stage.getHeight() +30);
+            });
+            // Hiện popup và đợi người dùng đóng
+            stage.showAndWait();
+            List<DichVu> ds = controller.getSelectedDichVu();
+            dsDichVu.clear();
+            dsDichVu.addAll(ds);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setupColThaoTac() {
+
+        colThaoTac.setCellFactory(param -> new TableCell<DichVu, Void>() {
+
+            private final Button btnXoa = new Button("Xóa");
+
+            {
+
+                btnXoa.setOnAction(event -> {
+
+                    DichVu dv = getTableView().getItems().get(getIndex());
+
+                    dsDichVu.remove(dv);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+
+                super.updateItem(item, empty);
+
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(btnXoa);
+                }
+            }
+
+        });
+
+    }
+
+    @FXML
+    private void themDichVu() {
+        if (phieudangchon != null) {
+            handleThemDichVu();
+        }
+
     }
 }

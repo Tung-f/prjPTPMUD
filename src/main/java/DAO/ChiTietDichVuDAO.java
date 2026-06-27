@@ -10,6 +10,7 @@ package DAO;
  */
 import com.mycompany.quanlyxuongsuaxe.dao.DatabaseConnection;
 import Model.ChiTietDichVu;
+import Model.DichVu;
 import java.math.BigDecimal;
 
 import java.sql.Connection;
@@ -83,8 +84,10 @@ public class ChiTietDichVuDAO {
                 ){
                 ps.setInt(1, ctdv.getMaPhieu());
                 ps.setInt(2, ctdv.getMaDV());
-                ps.setBigDecimal(4, ctdv.getDonGia());
-                return ps.executeUpdate()>0;
+                ps.setBigDecimal(3, ctdv.getDonGia());
+                int row = ps.executeUpdate();
+                System.out.println("Cap nhat"+row);
+                return row>0;
             }
     }
     //Cap nhat chi tiet dich vu
@@ -101,16 +104,19 @@ public class ChiTietDichVuDAO {
         }
     }
     //Xoa chi tiet dich vu
-    public boolean delete(int MaPhieu , int MaDV, Connection conn)throws SQLException{
-        String sql = "DELETE FROM ChiTietDichVu WHERE MaPhieu = ? AND MaDV = ?";
+    public boolean delete(int MaPhieu , Connection conn)throws SQLException{
+        String sql = "DELETE FROM ChiTietDichVu WHERE MaPhieu = ?";
         
         try(
                 PreparedStatement ps = conn.prepareStatement(sql)
                 ){
             ps.setInt(1, MaPhieu);
-            ps.setInt(2, MaDV);
-            return ps.executeUpdate()>0;
+           
+            int row = ps.executeUpdate();
+            System.out.println("row="+row);
+            return true;
         }
+        
     }
     //Tính tổng tiền dịch vụ
     public BigDecimal tongTienDichVu(int maPhieu) {
@@ -140,4 +146,30 @@ public class ChiTietDichVuDAO {
 
     return BigDecimal.ZERO;
 }
+    public List<DichVu> getDichVuTheoPhieu(int maPhieu) throws Exception {
+
+        List<DichVu> list = new ArrayList<>();
+
+        String sql = "SELECT dv.MaDV, dv.TenDV, ctdv.DonGia FROM ChiTietDichVu ctdv JOIN DichVu dv ON dv.MaDV = ctdv.MaDV WHERE ctdv.MaPhieu = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maPhieu);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                DichVu dv = new DichVu();
+
+                dv.setMaDV(rs.getInt("MaDV"));
+                dv.setTenDV(rs.getString("TenDV"));
+                dv.setTienCong(rs.getBigDecimal("DonGia"));
+
+                list.add(dv);
+            }
+        }
+
+        return list;
+    }
 }

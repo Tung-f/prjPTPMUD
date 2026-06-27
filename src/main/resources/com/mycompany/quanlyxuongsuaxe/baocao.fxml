@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="0.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #f5f7fb;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="com.mycompany.quanlyxuongsuaxe.BaoCaoController" >
    <top>
       <VBox BorderPane.alignment="CENTER_LEFT">
          <children>
@@ -129,14 +129,14 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <DatePicker />
+                  <DatePicker fx:id="dateTuNgay"/>
                   <Label style="-fx-font-weight: bold;" text="Đến ngày">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <DatePicker />
-                  <Button mnemonicParsing="false" style="-fx-background-color: #2563eb; -fx-font-weight: bold;" text="Xem báo cáo" textFill="WHITE">
+                  <DatePicker fx:id="dateDenNgay"/>
+                  <Button mnemonicParsing="false" onAction="#xemBaoCao" style="-fx-background-color: #2563eb; -fx-font-weight: bold;" text="Xem báo cáo" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font>
@@ -160,26 +160,26 @@
                         <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                      </padding>
                   </HBox>
-                  <LineChart>
+                  <LineChart fx:id="lineChart">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                        <CategoryAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                        <NumberAxis side="LEFT" />
                     </yAxis>
-                  </LineChart>
+                </LineChart>
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #ddd; -fx-border-radius: 12;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <BarChart>
+                  <BarChart fx:id="barChart">
                     <xAxis>
-                      <CategoryAxis side="BOTTOM" />
+                        <CategoryAxis side="BOTTOM" />
                     </xAxis>
                     <yAxis>
-                      <NumberAxis side="LEFT" />
+                        <NumberAxis side="LEFT" />
                     </yAxis>
-                  </BarChart>
+                </BarChart>
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #ddd; -fx-border-radius: 8;" GridPane.columnIndex="2">
@@ -206,7 +206,7 @@
                               <Font name="System Bold" size="14.0" />
                            </font>
                         </Label>
-                        <Label text="Label" />
+                        <Label fx:id="lblTongCongViec" text="0" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -219,7 +219,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label text="Label" />
+                        <Label fx:id="lblTongDoanhThu" text="0"  />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -232,7 +232,7 @@
                               <Font size="14.0" />
                            </font>
                         </Label>
-                        <Label text="Label" />
+                        <Label fx:id="lblSoKhachHang" text="0"/>
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
